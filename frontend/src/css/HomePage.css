@@ -1,18 +1,65 @@
-/* HomePage.css */
+/* src/css/HomePage.css */
+
 .home-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    position: relative;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .map-container {
+    position: relative; /* Ensure that search bar is positioned relative to this container */
+    height: 100%;
+    width: 100%;
   }
   
   .map {
-    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Ensure zoom controls are visible */
+  .leaflet-control-container {
+    z-index: 1000; /* Ensure zoom controls are above other elements */
+  }
+  
+  .search-bar {
+    position: absolute;
+    top: 20px; /* Adjust based on your navbar height */
+    left: 60px;
+    z-index: 1000; /* Ensure it is above the map */
+    width: 300px; /* Adjust width as needed */
+    background: white; /* Ensure readability */
+    border: 1px solid #ccc; /* Add border for visibility */
+    border-radius: 4px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for better appearance */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for better visibility */
   }
   
   .footer {
-    background-color: #343a40;
-    color: #fff;
+    padding: 20px;
+    background-color: #f8f9fa;
     text-align: center;
-    padding: 10px 0;
+  }
+  
+  /* CSS for bouncing icon */
+  .bouncing-icon {
+    position: relative;
+  }
+  
+  .custom-icon {
+    width: 32px;
+    height: 32px;
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-30px);
+    }
+    60% {
+      transform: translateY(-15px);
+    }
   }
   
