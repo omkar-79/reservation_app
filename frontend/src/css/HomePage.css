@@ -1,0 +1,18 @@
+/* HomePage.css */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .map {
+    flex-grow: 1;
+  }
+  
+  .footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+  }
+  

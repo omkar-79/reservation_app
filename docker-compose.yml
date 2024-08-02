@@ -22,7 +22,7 @@ services:
       - /usr/src/app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-    command: ["npm", "start"]
+    command: npm start -- --host 0.0.0.0
 
   mongo:
     image: mongo:latest

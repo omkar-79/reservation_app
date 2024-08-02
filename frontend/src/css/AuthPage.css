@@ -1,0 +1,317 @@
+/* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
+
+/* Default styles */
+html, body, .container, #app {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    margin: 0 !important;
+}
+
+.app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: scroll;
+    background-image: url('https://unsplash.it/1366/768?image=568');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-block-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    transition: all .85s ease-in-out;
+}
+
+.form-block-wrapper--is-login {
+    opacity: .92;
+    background-color: #2C497F;
+}
+
+.form-block-wrapper--is-signup {
+    opacity: .94;
+    background-color: #433B7C;
+}
+
+.form-block {
+    position: relative;
+    margin: 100px auto 0;
+    width: 285px;
+    padding: 25px;
+    background: rgba(255, 255, 255, .13);
+    border-radius: 2px;
+    color: #fff;
+    box-shadow: 0px 0px 16px 9px rgba(0,0,0,0.07);
+    transition: all .5s ease-in-out;
+}
+
+.form-block__header {
+    margin-bottom: 20px;
+}
+
+.form-block__header h1 {
+    font-size: 30px;
+    margin: 0 0 20px;
+}
+/* Container for the toggle buttons */
+.form-block__toggle-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.form-block__toggle-block span {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,.65);
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.form-block__input-wrapper {
+    position: relative;
+    transition: all .5s ease-in-out;
+}
+
+.form-block--is-signup .form-block__input-wrapper {
+    height: 252px;
+}
+
+.form-block--is-login .form-block__input-wrapper {
+    height: 126px;
+}
+
+.form-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+}
+
+.form-group--login {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.form-group--signup {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.form-block--is-signup .form-group--signup {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.form-block--is-signup .form-group--login {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.form-group__input {
+    display: block;
+    font-size: 16px;
+    color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 10px;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,.25);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 1px;
+}
+
+.form-group__input:focus {
+    outline: none;
+    border: 1px solid #fff;
+    background: transparent;
+}
+
+.button {
+    display: inline-block;
+    padding: 15px 12px;
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: none;
+    border-radius: 2px;
+    transition: all .2s ease-in-out;
+    box-shadow: 0px 0px 13px 8px rgba(0,0,0,0.1);
+}
+
+.button--primary {
+    background: #ED6A5E;
+    color: #fff;
+}
+
+.button:hover {
+    box-shadow: 0px 0px 18px 15px rgba(0,0,0,0.15);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.social-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button--google {
+    background-color: #db4437;
+    color: white;
+    padding: 15px 12px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    text-transform: uppercase;
+}
+
+.button--google:hover {
+    background-color: #c33c2e;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"] + label:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 43px;
+    height: 8px;
+    background: rgba(255, 255, 255, .4);
+    cursor: pointer;
+    border-radius: 50px;
+}
+
+input[type="checkbox"] + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 1px;
+    right: 18px;
+    width: 25px;
+    height: 25px;
+    background: #ED6A5E;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.15);
+    transition: all .3s ease-in-out;
+}
+
+input[type="checkbox"]:checked + label:after {
+    right: 0;
+}
+
+/* Placeholder styles */
+::-webkit-input-placeholder {
+    font-weight: 300;
+    color: rgba(255, 255, 255, .5);
+}
+
+::-moz-placeholder {
+    font-weight: 300;
+    color: rgba(255, 255, 255, .5);
+}
+
+:-ms-input-placeholder {
+    font-weight: 300;
+    color: rgba(255, 255, 255, .5);
+}
+
+:-moz-placeholder {
+    font-weight: 300;
+    color: rgba(255, 255, 255, .5);
+}
+
+/* Tooltip */
+.tooltip {
+    padding: 7px;
+    border-radius: 1px;
+    background: rgba(0,0,0,.5);
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    top: -10px;
+    right: 0;
+}
+.or {
+  margin: 20px 0; /* Adjust margin as needed */
+  font-size: 16px;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7); /* Optional: adjust color */
+}
+
+/* Text and button container */
+.toggle-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 10px;
+}
+
+/* Toggle buttons */
+.form-toggle-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Add space between buttons if needed */
+}
+
+/* Toggle button styles */
+.toggle-button {
+  background: transparent;
+  border: none;
+  color: #ED6A5E;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+/* Active toggle button style */
+.toggle-button.active {
+  font-weight: bold;
+}
+
