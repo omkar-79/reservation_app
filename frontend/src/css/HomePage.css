@@ -16,11 +16,6 @@
     width: 100%;
   }
   
-  /* Ensure zoom controls are visible */
-  .leaflet-control-container {
-    z-index: 1000; /* Ensure zoom controls are above other elements */
-  }
-  
   .search-bar {
     position: absolute;
     top: 20px; /* Adjust based on your navbar height */
@@ -28,10 +23,26 @@
     z-index: 1000; /* Ensure it is above the map */
     width: 300px; /* Adjust width as needed */
     background: white; /* Ensure readability */
-    border: 1px solid #ccc; /* Add border for visibility */
-    border-radius: 4px; /* Rounded corners */
-    padding: 5px 10px; /* Padding for better appearance */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for better visibility */
+  }
+  
+  .search-results {
+    position: absolute;
+    top: 40px; /* Adjust based on your navbar and search bar height */
+    left: 60px;
+    z-index: 1000; /* Ensure it is above the map */
+    max-height: 400px; /* Limit the height of the results */
+    overflow-y: auto; /* Add scrollbar if needed */
+  }
+  
+  .search-results .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .directions-button {
+    font-size: 0.875rem; /* Slightly smaller font size */
+    padding: 0; /* Adjust padding */
   }
   
   .footer {
@@ -40,7 +51,6 @@
     text-align: center;
   }
   
-  /* CSS for bouncing icon */
   .bouncing-icon {
     position: relative;
   }
@@ -61,5 +71,24 @@
     60% {
       transform: translateY(-15px);
     }
+  }
+
+  
+.map-container .leaflet-popup {
+    max-width: 300px; /* Ensure popup width is sufficient */
+  }
+  .leaflet-popup-content {
+    max-width: 200px; /* Set a max width */
+    word-wrap: break-word; /* Wrap text to avoid overflow */
+  }
+  
+  .leaflet-popup-content-wrapper {
+    overflow: auto; /* Ensure content scrolls if it overflows */
+  }
+  
+  .leaflet-popup-content button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
   }
   

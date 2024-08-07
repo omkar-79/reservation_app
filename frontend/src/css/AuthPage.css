@@ -20,7 +20,7 @@ body {
     left: 0;
     right: 0;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto; /* Changed to auto for better scrolling */
     background-image: url('https://unsplash.it/1366/768?image=568');
     background-repeat: no-repeat;
     background-size: cover;
@@ -61,22 +61,26 @@ body {
     color: #fff;
     box-shadow: 0px 0px 16px 9px rgba(0,0,0,0.07);
     transition: all .5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form-block__header {
     margin-bottom: 20px;
+    text-align: center; /* Center the header text */
 }
 
 .form-block__header h1 {
     font-size: 30px;
     margin: 0 0 20px;
 }
-/* Container for the toggle buttons */
+
 .form-block__toggle-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .form-block__toggle-block span {
@@ -91,46 +95,24 @@ body {
     cursor: pointer;
 }
 
-
 .form-block__input-wrapper {
     position: relative;
     transition: all .5s ease-in-out;
+    width: 100%; /* Ensure it takes full width */
 }
 
 .form-block--is-signup .form-block__input-wrapper {
-    height: 252px;
+    height: auto; /* Adjust based on form content */
 }
 
 .form-block--is-login .form-block__input-wrapper {
-    height: 126px;
+    height: auto; /* Adjust based on form content */
 }
 
 .form-group {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: opacity .5s ease-in-out, transform .5s ease-in-out;
-}
-
-.form-group--login {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.form-group--signup {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-.form-block--is-signup .form-group--signup {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.form-block--is-signup .form-group--login {
-    opacity: 0;
-    transform: translateX(-100%);
+    position: relative;
+    width: 100%; /* Full width for input group */
+    margin-bottom: 15px; /* Spacing between form groups */
 }
 
 .form-group__input {
@@ -140,7 +122,7 @@ body {
     width: 100%;
     box-sizing: border-box;
     padding: 14px 10px;
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Space between inputs */
     background: rgba(255,255,255,.25);
     border: 1px solid rgba(255,255,255,.1);
     border-radius: 1px;
@@ -241,7 +223,6 @@ input[type="checkbox"]:checked + label:after {
     right: 0;
 }
 
-/* Placeholder styles */
 ::-webkit-input-placeholder {
     font-weight: 300;
     color: rgba(255, 255, 255, .5);
@@ -262,7 +243,6 @@ input[type="checkbox"]:checked + label:after {
     color: rgba(255, 255, 255, .5);
 }
 
-/* Tooltip */
 .tooltip {
     padding: 7px;
     border-radius: 1px;
@@ -273,45 +253,60 @@ input[type="checkbox"]:checked + label:after {
     top: -10px;
     right: 0;
 }
+
 .or {
-  margin: 20px 0; /* Adjust margin as needed */
-  font-size: 16px;
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center;
-  color: rgba(255, 255, 255, 0.7); /* Optional: adjust color */
+    margin: 20px 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
 }
 
-/* Text and button container */
 .toggle-text {
-  font-size: 13px;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 10px;
 }
 
-/* Toggle buttons */
 .form-toggle-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; /* Add space between buttons if needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Toggle button styles */
 .toggle-button {
-  background: transparent;
-  border: none;
-  color: #ED6A5E;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 5px;
-  font-weight: normal;
-  text-decoration: underline;
+    background: transparent;
+    border: none;
+    color: #ED6A5E;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px;
+    font-weight: normal;
+    text-decoration: underline;
 }
 
-/* Active toggle button style */
 .toggle-button.active {
-  font-weight: bold;
+    font-weight: bold;
 }
 
+.button--google {
+    background-color: #db4437;
+    color: white;
+    padding: 15px 12px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.button--google:hover {
+    background-color: #c33c2e;
+}

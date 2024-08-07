@@ -1,0 +1,163 @@
+/* Container for the reservation details */
+.reservation-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Heading styles */
+.reservation-page h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* Information section */
+.reservation-info {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Details text */
+.reservation-info h2 {
+    font-size: 1.5rem;
+    color: #333; /* Ensure heading color is dark */
+}
+
+.reservation-info p {
+    font-size: 1rem;
+    color: #555; /* Ensure text color is readable */
+    line-height: 1.6;
+}
+
+/* Date selection */
+.date-selection {
+    margin-top: 20px;
+}
+
+.date-selection label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.date-selection input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Court availability section */
+.court-availability {
+    margin-top: 20px;
+}
+
+.court-availability h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.court-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.court {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.court.available {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.court.unavailable {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.court.selected {
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+.court-icon {
+    width: 64px;
+    height: 64px;
+}
+
+/* Time slot selection */
+.time-slot-selection {
+    margin-top: 20px;
+}
+
+.time-slot-selection h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.time-slot {
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+.time-slot.selected {
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+/* Button styles */
+.reserve-button {
+    display: block;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.reserve-button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: add some spacing between elements */
+.reservation-page > *:not(:last-child) {
+    margin-bottom: 20px;
+}

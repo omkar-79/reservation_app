@@ -1,105 +1,107 @@
-import React from 'react';
-import '../css/AuthPage.css'
-
-class LoginComponent extends React.Component {
-  constructor(props) {
-      super(props);
-      this.state = {
-          mode: this.props.mode || 'login'
-      };
-  }
-
-  toggleMode = (newMode) => {
-      this.setState({ mode: newMode  });
-  }
-
-  render() {
-    const { mode } = this.state;
-      return (
-        
-          <div>
-              <div className={`form-block-wrapper form-block-wrapper--is-${this.state.mode}`}></div>
-              <section className={`form-block form-block--is-${this.state.mode}`}>
-                  <header className="form-block__header">
-                  <h1>{mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
-            <div className="form-block__toggle-block">
-              <span>
-                {mode === 'login'
-                  ? 'Don\'t have an account?'
-                  : 'Already have an account?'}
-              </span>
-              <div className="form-toggle-buttons">
-                {mode === 'login' && (
-                  <button
-                    className={`toggle-button ${mode === 'signup' ? 'active' : ''}`}
-                    onClick={() => this.toggleMode('signup')}
-                  >
-                    Sign Up
-                  </button>
-                )}
-                {mode === 'signup' && (
-                  <button
-                    className={`toggle-button ${mode === 'login' ? 'active' : ''}`}
-                    onClick={() => this.toggleMode('login')}
-                  >
-                    Login
-                  </button>
-                )}
-              </div>
-            </div>
-                  </header>
-                  <LoginForm mode={this.state.mode} onSubmit={this.props.onSubmit} />
-                  <div className="or">Or</div>
-                  <button className="button button--google full-width">
-                      Login with Google
-                  </button>
-              </section>
-          </div>
-      );
-  }
-}
-
-class LoginForm extends React.Component {
-  render() {
-      return (
-          <form onSubmit={this.props.onSubmit}>
-              <div className="form-block__input-wrapper">
-                  <div className={`form-group form-group--login ${this.props.mode === 'signup' ? 'hidden' : ''}`}>
-                      <Input type="text" id="username" label="user name" />
-                      <Input type="password" id="password" label="password" />
-                  </div>
-                  <div className={`form-group form-group--signup ${this.props.mode === 'login' ? 'hidden' : ''}`}>
-                      <Input type="text" id="fullname" label="full name" />
-                      <Input type="email" id="email" label="email" />
-                      <Input type="password" id="createpassword" label="password" />
-                      <Input type="password" id="repeatpassword" label="repeat password" />
-                  </div>
-              </div>
-              <button className="button button--primary full-width" type="submit">
-                  {this.props.mode === 'login' ? 'Log In' : 'Sign Up'}
-              </button>
-          </form>
-      );
-  }
-}
-
-const Input = ({ id, type, label }) => (
-  <input className="form-group__input" type={type} id={id} placeholder={label} />
-);
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../css/AuthPage.css';
 
 const AuthPage = () => {
-  const mode = 'login';
+  const [mode, setMode] = useState('login');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    email: '',
+    createpassword: '',
+    repeatpassword: '',
+  });
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (mode === 'login') {
+        // Login request
+        const response = await axios.post('http://localhost:3000/users/login', {
+          username: formData.username,
+          password: formData.password,
+        });
+        setMessage('Login successful!');
+        // Handle successful login (e.g., save token, redirect)
+      } else {
+        // Sign up request
+        if (formData.createpassword !== formData.repeatpassword) {
+          setMessage('Passwords do not match!');
+          return;
+        }
+        const response = await axios.post('http://localhost:3000/users/signup', {
+          username: formData.username,
+          password: formData.createpassword,
+          email: formData.email,
+        });
+        setMessage('Sign up successful!');
+        // Handle successful signup (e.g., redirect to login)
+      }
+    } catch (error) {
+      setMessage(`Error: ${error.response ? error.response.data.error : 'An error occurred'}`);
+    }
+  };
 
   return (
-      <div className={`app app--is-${mode}`}>
-          <LoginComponent
-              mode={mode}
-              onSubmit={() => {
-                  console.log('submit');
-              }}
-          />
-      </div>
+    <div className={`app app--is-${mode}`}>
+      <div className={`form-block-wrapper form-block-wrapper--is-${mode}`}></div>
+      <section className={`form-block form-block--is-${mode}`}>
+        <header className="form-block__header">
+          <h1>{mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
+          <div className="form-block__toggle-block">
+            <span>{mode === 'login' ? 'Don\'t have an account?' : 'Already have an account?'}</span>
+            <div className="form-toggle-buttons">
+              {mode === 'login' && (
+                <button className={`toggle-button ${mode === 'signup' ? 'active' : ''}`} onClick={() => setMode('signup')}>
+                  Sign Up
+                </button>
+              )}
+              {mode === 'signup' && (
+                <button className={`toggle-button ${mode === 'login' ? 'active' : ''}`} onClick={() => setMode('login')}>
+                  Login
+                </button>
+              )}
+            </div>
+          </div>
+        </header>
+        <form onSubmit={handleSubmit}>
+          <div className="form-block__input-wrapper">
+            {mode === 'login' && (
+              <>
+                <Input type="text" id="username" label="Username" value={formData.username} onChange={handleChange} />
+                <Input type="password" id="password" label="Password" value={formData.password} onChange={handleChange} />
+              </>
+            )}
+            {mode === 'signup' && (
+              <>
+                <Input type="text" id="username" label="Username" value={formData.username} onChange={handleChange} />
+                <Input type="email" id="email" label="Email" value={formData.email} onChange={handleChange} />
+                <Input type="password" id="createpassword" label="Password" value={formData.createpassword} onChange={handleChange} />
+                <Input type="password" id="repeatpassword" label="Repeat Password" value={formData.repeatpassword} onChange={handleChange} />
+              </>
+            )}
+          </div>
+          <button className="button button--primary full-width" type="submit">{mode === 'login' ? 'Log In' : 'Sign Up'}</button>
+          <div className="or">OR</div>
+          <button className="button button--google full-width">Sign In with Google</button>
+          <div className="message">{message}</div>
+        </form>
+      </section>
+    </div>
   );
 };
+
+const Input = ({ label, id, type, value, onChange }) => (
+  <div className="form-group">
+    <label htmlFor={id}>{label}</label>
+    <input type={type} id={id} value={value} onChange={onChange} className="form-group__input" required />
+  </div>
+);
 
 export default AuthPage;

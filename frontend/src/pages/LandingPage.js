@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Container, Navbar, Nav, Button, Row, Col, Image } from 'react-bootstrap';
 import '../css/LandingPage.css'; // Ensure this path is correct
 
@@ -10,6 +9,11 @@ const LandingPage = () => {
   const handleGetStartedClick = () => {
     navigate('/auth');
   };
+
+  const handleRegisterGroundClick = () => {
+    navigate('/register-ground'); // Navigate to the RegisterGround page
+  };
+
   return (
     <div>
       {/* Navigation Bar */}
@@ -19,10 +23,11 @@ const LandingPage = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-            <Nav.Link href="/map">Map</Nav.Link>
+              <Nav.Link href="/map">Map</Nav.Link>
               <Nav.Link href="#about">About</Nav.Link>
               <Nav.Link href="#features">Features</Nav.Link>
               <Nav.Link href="#contact">Contact</Nav.Link>
+              <Button variant="outline-light" onClick={handleRegisterGroundClick}>Register Ground</Button> {/* New button */}
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Container, Navbar, Nav, Button, FormControl } from 'react-bootstrap';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import React, { useState, useEffect } from 'react';
+import { Container, Navbar, Nav, Button, FormControl, ListGroup } from 'react-bootstrap';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import '../css/HomePage.css';
 import icons from '../assets/icons'; // Import the icons
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import axios for API calls
 
 // Fix for default marker icon not showing in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -23,12 +25,85 @@ const createIcon = (iconUrl) => L.divIcon({
 
 const HomePage = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [filteredGrounds, setFilteredGrounds] = useState([]);
+  const [grounds, setGrounds] = useState([]); // State for storing grounds data
+  const [userLocation, setUserLocation] = useState(null);
+  const [selectedGround, setSelectedGround] = useState(null);
 
-  const grounds = [
-    { id: 1, name: 'Tennis Court 1', type: 'tennis', lat: 38.89511, lng: -77.03637, courtsAvailable: 2 },
-    { id: 2, name: 'Basketball Court 1', type: 'basketball', lat: 38.88951, lng: -77.05012, courtsAvailable: 1 },
-    // Add more grounds here...
-  ];
+  useEffect(() => {
+    // Fetch grounds data from API
+    const fetchGrounds = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/grounds');
+        setGrounds(response.data);
+      } catch (error) {
+        console.error('Error fetching grounds data:', error);
+      }
+    };
+
+    fetchGrounds();
+
+    // Get user location
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error('Error getting user location:', error);
+      }
+    );
+  }, []);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+
+    if (value) {
+      const filtered = grounds.filter(ground =>
+        ground.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredGrounds(filtered);
+    } else {
+      setFilteredGrounds([]);
+    }
+  };
+
+  const handleSearchResultClick = (ground) => {
+    setSelectedGround(ground);
+  };
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 3958.8; // Radius of Earth in miles
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in miles
+  };
+
+  const MapViewUpdater = () => {
+    const map = useMap();
+    useEffect(() => {
+      if (selectedGround) {
+        map.setView([selectedGround.latitude, selectedGround.longitude], 15); // Zoom to the selected ground
+      }
+    }, [selectedGround, map]);
+
+    return null;
+  };
+
+  const navigate = useNavigate();
+
+  const handleReserveClick = (ground) => {
+    navigate(`/reservation/${ground._id}`); // Use _id instead of id
+  };
 
   return (
     <div className="home-page">
@@ -56,33 +131,63 @@ const HomePage = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
           />
-          {grounds
-            .filter((ground) => ground.name.toLowerCase().includes(searchValue.toLowerCase()))
-            .map((ground) => (
-              <Marker
-                key={ground.id}
-                position={[ground.lat, ground.lng]}
-                icon={createIcon(icons[ground.type])} // Use the appropriate icon
-              >
-                <Popup>
-                  <div>
-                    <h4>{ground.name}</h4>
-                    <p>Courts Available: {ground.courtsAvailable}</p>
-                    <Button variant="primary">Reserve</Button>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+          {grounds.map((ground) => (
+            <Marker
+              key={ground._id} // Use _id from MongoDB
+              position={[ground.latitude, ground.longitude]}
+              icon={createIcon(icons[ground.type])}
+            >
+              <Popup>
+                <div style={{ maxWidth: '200px', padding: '10px', textAlign: 'center' }}>
+                  <h4>{ground.name}</h4>
+                  <p>Courts Available: {ground.totalCourts}</p>
+                  <button
+                    onClick={() => handleReserveClick(ground)}
+                    style={{
+                      backgroundColor: '#007bff',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '10px 20px',
+                      width: '100%',
+                      marginTop: '10px',
+                      fontSize: '16px'
+                    }}
+                  >
+                    Reserve
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+          <MapViewUpdater />
         </MapContainer>
 
         {/* Search Bar */}
-        <FormControl
-          type="text"
-          placeholder="Search"
-          className="search-bar"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <div className="search-bar">
+          <FormControl
+            type="text"
+            placeholder="Search"
+            value={searchValue}
+            onChange={handleSearch}
+          />
+          {searchValue && filteredGrounds.length > 0 && (
+            <ListGroup className="search-results">
+              {filteredGrounds.map((ground) => (
+                <ListGroup.Item key={ground._id}> {/* Use _id for unique key */}
+                  {ground.name} - {userLocation && calculateDistance(userLocation.lat, userLocation.lon, ground.latitude, ground.longitude).toFixed(2)} miles
+                  <Button
+                    variant="link"
+                    className="directions-button"
+                    onClick={() => handleSearchResultClick(ground)}
+                  >
+                    View on Map
+                  </Button>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          )}
+        </div>
       </div>
 
       {/* Footer */}
