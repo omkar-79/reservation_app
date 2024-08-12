@@ -3,6 +3,11 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { tennisCourtIcon } from '../assets/facility';
 import '../css/ReservationPage.css';
+import Header from '../components/Header'
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 const ReservationPage = () => {
     const { id } = useParams(); // Get the ground ID from the URL
@@ -13,6 +18,8 @@ const ReservationPage = () => {
     const [ground, setGround] = useState(null);
     const [courts, setCourts] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
+    // Inside your component:
+const navigate = useNavigate();
 
 
     // Function to fetch ground details and courts
@@ -94,26 +101,49 @@ const ReservationPage = () => {
     };
     
     // Handle reservation submission
-    const handleReservation = async () => {
-        try {
-            await axios.post('http://localhost:3000/api/reservations', {
+// Handle reservation submission
+const handleReservation = async () => {
+    try {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token');
+
+        // Check if the user is authenticated
+        if (!token) {
+            alert('You must be logged in to make a reservation');
+            navigate('/auth');
+            return;
+        }
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+
+        await axios.post(
+            'http://localhost:3000/api/reservations',
+            {
                 groundId: id,
-                userId: 'user123', // Replace with actual user ID
+                userId: userId, // Replace with actual user ID
                 date: selectedDate,
                 timeSlots: selectedSlots,
                 courtId: selectedCourt,
-            });
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+                },
+            }
+        );
 
-            alert('Reservation created successfully!');
-        } catch (error) {
-            alert('Error creating reservation');
-        }
-    };
+        alert('Reservation created successfully!');
+    } catch (error) {
+        alert('Error creating reservation');
+    }
+};
+
 
     if (!ground) return <div>Loading...</div>;
 
     return (
         <div className="reservation-page">
+            <Header />
             <h1>Reservation Details</h1>
             <div className="reservation-info">
                 <h2>{ground.name}</h2>

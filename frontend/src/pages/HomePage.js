@@ -7,6 +7,8 @@ import '../css/HomePage.css';
 import icons from '../assets/icons'; // Import the icons
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios for API calls
+import Header from '../components/Header'
+
 
 // Fix for default marker icon not showing in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -29,6 +31,7 @@ const HomePage = () => {
   const [grounds, setGrounds] = useState([]); // State for storing grounds data
   const [userLocation, setUserLocation] = useState(null);
   const [selectedGround, setSelectedGround] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
   useEffect(() => {
     // Fetch grounds data from API
@@ -43,6 +46,7 @@ const HomePage = () => {
 
     fetchGrounds();
 
+    
     // Get user location
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -55,7 +59,21 @@ const HomePage = () => {
         console.error('Error getting user location:', error);
       }
     );
+    // Check if the user is authenticated
+    const checkAuth = async () => {
+      try {
+        // Replace this with your actual authentication check logic
+        const response = await axios.get('/api/check-auth'); // Example API call to check authentication
+        setIsAuthenticated(response.data.isAuthenticated);
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+      }
+    };
+
+    checkAuth();
   }, []);
+
+  
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -102,27 +120,16 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handleReserveClick = (ground) => {
-    navigate(`/reservation/${ground._id}`); // Use _id instead of id
+      navigate(`/reservation/${ground._id}`); // Use _id instead of id
+    
+    
   };
+
 
   return (
     <div className="home-page">
       {/* Header */}
-      <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-        <Container>
-          <Navbar.Brand href="/">ReserveIt</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="#about">About</Nav.Link>
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#contact">Contact</Nav.Link>
-              <Nav.Link href="/map">Map</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Header />
 
       {/* Full-Screen Map */}
       <div className="map-container">
@@ -191,11 +198,7 @@ const HomePage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="footer">
-        <Container>
-          <p>&copy; 2024 ReserveIt. All rights reserved.</p>
-        </Container>
-      </footer>
+     
     </div>
   );
 };

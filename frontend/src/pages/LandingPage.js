@@ -2,12 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, Button, Row, Col, Image } from 'react-bootstrap';
 import '../css/LandingPage.css'; // Ensure this path is correct
+import Header from '../components/Header'
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleGetStartedClick = () => {
-    navigate('/auth');
+    navigate('/map');
   };
 
   const handleRegisterGroundClick = () => {
@@ -17,28 +18,14 @@ const LandingPage = () => {
   return (
     <div>
       {/* Navigation Bar */}
-      <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-        <Container>
-          <Navbar.Brand href="#home">ReserveIt</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
-              <Nav.Link href="/map">Map</Nav.Link>
-              <Nav.Link href="#about">About</Nav.Link>
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#contact">Contact</Nav.Link>
-              <Button variant="outline-light" onClick={handleRegisterGroundClick}>Register Ground</Button> {/* New button */}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Header />
 
       {/* Hero Section */}
       <div className="hero-section" id="home">
         <Container>
           <Row className="justify-content-center">
             <Col md={8}>
-              <h1>Welcome to ReserveIt</h1>
+              <h1>Welcome to myKerchief</h1>
               <p>Book sports grounds effortlessly and manage your reservations in one place.</p>
               <Button variant="primary" size="lg" onClick={handleGetStartedClick}>Get Started</Button>
             </Col>

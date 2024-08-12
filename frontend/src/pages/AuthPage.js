@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../css/AuthPage.css';
 
 const AuthPage = () => {
@@ -12,6 +13,7 @@ const AuthPage = () => {
     repeatpassword: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -19,7 +21,7 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       if (mode === 'login') {
         // Login request
@@ -27,21 +29,32 @@ const AuthPage = () => {
           username: formData.username,
           password: formData.password,
         });
+
+        const { token } = response.data;
         setMessage('Login successful!');
-        // Handle successful login (e.g., save token, redirect)
+
+        // Store the token
+        localStorage.setItem('token', token);
+
+        // Check if user was redirected from reservation page
+        const redirectPath = localStorage.getItem('redirectPath') || '/map';
+        navigate(redirectPath); // Redirect to the appropriate page
+        localStorage.removeItem('redirectPath'); // Clean up
       } else {
         // Sign up request
         if (formData.createpassword !== formData.repeatpassword) {
           setMessage('Passwords do not match!');
           return;
         }
-        const response = await axios.post('http://localhost:3000/users/signup', {
+        await axios.post('http://localhost:3000/users/signup', {
           username: formData.username,
           password: formData.createpassword,
           email: formData.email,
         });
         setMessage('Sign up successful!');
-        // Handle successful signup (e.g., redirect to login)
+
+        // Redirect to login page
+        navigate('/login');
       }
     } catch (error) {
       setMessage(`Error: ${error.response ? error.response.data.error : 'An error occurred'}`);

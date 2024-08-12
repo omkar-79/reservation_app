@@ -3,6 +3,7 @@ import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../css/RegisterGround.css';
+import Header from '../components/Header'
 
 const sportsIcons = ['football', 'basketball', 'tennis', 'volleyball'];
 
@@ -95,7 +96,9 @@ const RegisterGround = () => {
   };
   
   return (
+    
     <div className="register-ground">
+      <Header />
       <h1>Register New Ground</h1>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
