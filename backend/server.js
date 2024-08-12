@@ -20,7 +20,7 @@ app.use(express.json()); // Middleware to parse JSON
 // Routes
 app.use('/users', userRoutes);
 app.use('/api/grounds', groundRoutes);
-app.use('/api/reservations', reservationRoutes);
+app.use('/api/', reservationRoutes);
 app.use('/api/', courtRoutes);
 
 // Connect to MongoDB

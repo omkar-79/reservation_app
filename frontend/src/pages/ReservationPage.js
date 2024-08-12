@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { tennisCourtIcon } from '../assets/facility';
@@ -7,61 +7,73 @@ import '../css/ReservationPage.css';
 const ReservationPage = () => {
     const { id } = useParams(); // Get the ground ID from the URL
 
-    const [selectedCourt, setSelectedCourt] = useState(null); // New state for selected court
+    const [selectedCourt, setSelectedCourt] = useState(null);
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedSlots, setSelectedSlots] = useState([]);
     const [ground, setGround] = useState(null);
     const [courts, setCourts] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
 
-    useEffect(() => {
-        // Fetch ground details from backend
-        const fetchGround = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3000/api/grounds/${id}`);
-                setGround(response.data);
-            } catch (error) {
-                console.error('Error fetching ground details', error);
-            }
-        };
 
-        fetchGround();
+    // Function to fetch ground details and courts
+    const fetchGroundAndCourts = useCallback(async () => {
+        try {
+            const [groundResponse, courtsResponse] = await Promise.all([
+                axios.get(`http://localhost:3000/api/grounds/${id}`),
+                axios.get(`http://localhost:3000/api/courts/by-ground/${id}`)
+            ]);
+            console.log('Fetched courts:', courtsResponse.data); 
+            setGround(groundResponse.data);
+            setCourts(courtsResponse.data);
+        } catch (error) {
+            console.error('Error fetching ground details and courts', error);
+        }
     }, [id]);
 
-    useEffect(() => {
-        // Fetch courts for the ground
-        const fetchCourts = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3000/api/courts/by-ground/${id}`);
-                setCourts(response.data);
-            } catch (error) {
-                console.error('Error fetching courts', error);
-            }
-        };
-
-        fetchCourts();
-    }, [id]);
-
-    useEffect(() => {
-        // Fetch available time slots based on selected date and court
-        const fetchAvailableTimeSlots = async () => {
-            if (selectedDate && selectedCourt) {
-                try {
-                    const response = await axios.get(`http://localhost:3000/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
-                    setTimeSlots(response.data);
-                } catch (error) {
-                    console.error('Error fetching available time slots', error);
-                }
-            }
-        };
-
-        fetchAvailableTimeSlots();
+    // Function to fetch available time slots
+    const fetchAvailableTimeSlots = useCallback(async () => {
+        if (!selectedDate || !selectedCourt) return;
+    
+        console.log("Fetching time slots for Court:", selectedCourt, "Date:", selectedDate); // Log to debug
+    
+        try {
+            const response = await axios.get(`http://localhost:3000/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
+            console.log("Fetched time slots:", response.data); // Log API response
+    
+            // Ensure the correct data is being set
+            setTimeSlots(response.data.timeSlots || []); // Safely set timeSlots array or an empty array
+        } catch (error) {
+            console.error('Error fetching available time slots', error);
+        }
     }, [selectedDate, selectedCourt]);
+    
+    
 
+    // Fetch ground and courts on component mount
+    useEffect(() => {
+        fetchGroundAndCourts();
+    }, [fetchGroundAndCourts]);
+
+    // Fetch time slots when selectedDate or selectedCourt changes
+    useEffect(() => {
+        if (selectedDate && selectedCourt) {
+            fetchAvailableTimeSlots();
+        }
+    }, [fetchAvailableTimeSlots, selectedDate, selectedCourt]);
+    
+
+    // Handle court selection
     const handleCourtClick = (courtId) => {
-        setSelectedCourt(courtId); // Set selected court
+        console.log('Court clicked:', courtId);
+        if (courtId) {
+            setSelectedCourt(courtId);
+        } else {
+            console.error('Invalid courtId:', courtId);
+        }
     };
+    
 
+    // Handle time slot selection
     const handleSlotClick = (slot) => {
         setSelectedSlots((prev) =>
             prev.includes(slot)
@@ -70,16 +82,26 @@ const ReservationPage = () => {
         );
     };
 
+
+    
+    const handleDateChange = (e) => {
+        const newDate = e.target.value;
+        if (newDate) {
+            setSelectedDate(newDate);
+        } else {
+            console.error('Invalid date:', newDate);
+        }
+    };
+    
+    // Handle reservation submission
     const handleReservation = async () => {
         try {
-            // Post reservation to backend
             await axios.post('http://localhost:3000/api/reservations', {
                 groundId: id,
                 userId: 'user123', // Replace with actual user ID
                 date: selectedDate,
                 timeSlots: selectedSlots,
-                courtId: selectedCourt, // Use selected court
-                reservationId: 'reservation123' // Generate or replace with actual ID
+                courtId: selectedCourt,
             });
 
             alert('Reservation created successfully!');
@@ -101,53 +123,72 @@ const ReservationPage = () => {
 
                 {/* Date Selection */}
                 <div className="date-selection">
-                    <label htmlFor="reservation-date">Select Date:</label>
-                    <input
-                        type="date"
-                        id="reservation-date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                </div>
-
-                {/* Court Selection Section */}
-                <div className="court-list">
-    {courts.length === 0 ? (
-        <p>No courts available</p>
-    ) : (
-        courts.map((court) => (
-            <div
-                key={court._id}
-                className={`court ${selectedCourt === court._id ? 'selected' : ''}`}
-                onClick={() => handleCourtClick(court._id)}
-            >
-                <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
-                Court {court._id}
-            </div>
-        ))
-    )}
+    <label htmlFor="reservation-date">Select Date:</label>
+    <input
+        type="date"
+        id="reservation-date"
+        value={selectedDate}
+        onChange={(e) => {
+            const newDate = e.target.value;
+            setSelectedDate(newDate);
+            console.log("Selected Date:", newDate); // Log the selected date
+        }}
+    />
 </div>
 
 
-                {/* Time Slot Selection */}
-                <div className="time-slot-selection">
-                    <h3>Select Time Slots</h3>
-                    <div className="time-slots">
-                        {timeSlots.length > 0 ? (
-                            timeSlots.map((slot, index) => (
-                                <div
-                                    key={index}
-                                    className={`time-slot ${selectedSlots.includes(slot) ? 'selected' : ''}`}
-                                    onClick={() => handleSlotClick(slot)}
-                                >
-                                    {slot}
-                                </div>
-                            ))
-                        ) : (
-                            <p>No time slots available</p>
-                        )}
-                    </div>
+                {/* Court Selection Section */}
+                <div className="court-list">
+                {courts.map((court) => {
+    console.log('Court object:', court); // Log court object (which is the court ID string)
+    return (
+        <div
+            key={court} // Use court directly as it's already the ID
+            className={`court ${selectedCourt === court ? 'selected' : ''}`} // Compare selectedCourt with court directly
+            onClick={() => handleCourtClick(court)} // Pass court directly
+        >
+            <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
+            Court {court} {/* Display the court ID */}
+        </div>
+    );
+})}
+
+
                 </div>
+
+
+
+
+                <div className="time-slot-selection">
+    <h3>Select Time Slots</h3>
+    <div className="time-slots">
+        {timeSlots.length > 0 ? (
+            timeSlots.map((slot, index) => {
+                if (typeof slot !== 'string') {
+                    console.error('Invalid time slot format:', slot);
+                    return null; // or handle accordingly
+                }
+                console.log('Rendering slot:', slot); // Log each slot
+                return (
+                    <div
+                        key={index}
+                        className={`time-slot ${selectedSlots.includes(slot) ? 'selected' : ''}`}
+                        onClick={() => handleSlotClick(slot)}
+                    >
+                        {slot} {/* Display the time slot */}
+                    </div>
+                );
+            })
+        ) : (
+            <p>No time slots available</p>
+        )}
+    </div>
+</div>
+
+
+
+                {/* Time Slot Selection */}
+                
 
                 <button className="reserve-button" onClick={handleReservation}>Reserve Now</button>
             </div>

@@ -2,25 +2,23 @@ const Court = require('../models/Court');
 const Reservation = require('../models/Reservation');
 const mongoose = require('mongoose');
 
-
 // Helper function to generate time slots
 const generateTimeSlots = (startTime, endTime, duration) => {
     let slots = [];
-    let currentTime = new Date(`1970-01-01T${startTime}:00Z`);
-    let endTimeDate = new Date(`1970-01-01T${endTime}:00Z`);
+    let startDate = new Date(`1970-01-01T${startTime}:00Z`);
+    let endDate = new Date(`1970-01-01T${endTime}:00Z`);
 
-    console.log("Start time:", currentTime);
-    console.log("End time:", endTimeDate);
-    console.log("Duration (minutes):", duration);
+    while (startDate <= endDate) {
+        // Convert the time to a more readable format, e.g., 'HH:MM'
+        const formattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        slots.push(formattedTime);
 
-    while (currentTime <= endTimeDate) {
-        slots.push(currentTime.toISOString());
-        currentTime = new Date(currentTime.getTime() + duration * 60000); // Add duration in minutes
+        // Move to the next time slot
+        startDate = new Date(startDate.getTime() + duration * 60000); // Add duration in minutes
     }
 
     return slots;
 };
-
 
 
 // Controller to create multiple courts and time slots
@@ -33,22 +31,28 @@ exports.createCourts = async (req, res) => {
         }
 
         const timeSlots = generateTimeSlots(timings.from, timings.to, timeSlotDuration);
-        console.log("Generated time slots:", timeSlots);
 
         const courtsData = [];
+        // Create court IDs first
+        const courtIds = [];
         for (let i = 0; i < totalCourts; i++) {
+            courtIds.push(new mongoose.Types.ObjectId());
+        }
+
+        // For each court ID, create time slots for each day
+        for (const courtId of courtIds) {
             for (let date = new Date(); date <= new Date('2024-08-15'); date.setDate(date.getDate() + 1)) {
                 const courtData = {
                     groundId,
-                    courtId: new mongoose.Types.ObjectId(),
+                    courtId,
                     timeSlots: [{ date: date.toISOString().split('T')[0], slots: timeSlots }],
                     reservedSlots: []
                 };
-                console.log("Prepared court data:", courtData);
                 courtsData.push(courtData);
             }
         }
 
+        // Insert courtsData in bulk
         await Court.insertMany(courtsData);
         res.status(201).json({ message: 'Courts and time slots created successfully' });
     } catch (error) {
@@ -58,8 +62,8 @@ exports.createCourts = async (req, res) => {
 };
 
 
-
 // Controller to get courts by ground ID
+
 exports.getCourtsByGroundId = async (req, res) => {
     try {
         const { groundId } = req.params;
@@ -68,18 +72,37 @@ exports.getCourtsByGroundId = async (req, res) => {
             return res.status(400).json({ error: 'Ground ID is required' });
         }
 
-        const courts = await Court.find({ groundId });
+        console.log('Received groundId:', groundId); // Debugging line
 
-        if (courts.length === 0) {
+        // Ensure groundId is a valid ObjectId
+        let objectId;
+        try {
+            objectId = new mongoose.Types.ObjectId(groundId);
+        } catch (error) {
+            console.error('Error converting groundId to ObjectId:', error); // Debugging line
+            return res.status(400).json({ error: 'Invalid Ground ID format' });
+        }
+
+        // Aggregation pipeline to get unique courtIds
+        const uniqueCourts = await Court.aggregate([
+            { $match: { groundId: objectId } },
+            { $group: { _id: "$courtId" } }
+        ]);
+
+        if (uniqueCourts.length === 0) {
             return res.status(404).json({ error: 'No courts found for this ground' });
         }
 
-        res.json(courts);
+        // Map the result to return only courtIds
+        const courtIds = uniqueCourts.map(court => court._id);
+
+        res.json(courtIds);
     } catch (error) {
         console.error('Error fetching courts by ground ID:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 // Controller to get time slots by court ID and date
 exports.getTimeSlotsByCourtAndDate = async (req, res) => {
@@ -95,7 +118,7 @@ exports.getTimeSlotsByCourtAndDate = async (req, res) => {
             return res.status(400).json({ error: 'Invalid date format' });
         }
 
-        const court = await Court.findOne({ courtId, 'timeSlots.date': targetDate });
+        const court = await Court.findOne({ courtId, 'timeSlots.date': targetDate.toISOString().split('T')[0] });
         if (!court) {
             return res.status(404).json({ error: 'Court or time slots not found' });
         }
@@ -109,7 +132,6 @@ exports.getTimeSlotsByCourtAndDate = async (req, res) => {
             return res.status(404).json({ error: 'No time slots found for this date' });
         }
 
-        // Get reserved slots for the specific date
         const reservedSlotsForDate = court.reservedSlots.find(slot => {
             const slotDate = new Date(slot.date);
             return slotDate.toDateString() === targetDate.toDateString();
@@ -139,35 +161,30 @@ exports.reserveTimeSlot = async (req, res) => {
             return res.status(400).json({ error: 'Invalid date format' });
         }
 
-        // Find and update the court
-        const court = await Court.findOne({ courtId, 'timeSlots.date': targetDate });
+        const court = await Court.findOne({ courtId, 'timeSlots.date': targetDate.toISOString().split('T')[0] });
         if (!court) {
             return res.status(404).json({ error: 'Court or time slots not found' });
         }
 
-        // Update reservedSlots for the court
         let reservedSlotsForDate = court.reservedSlots.find(slot => {
             const slotDate = new Date(slot.date);
             return slotDate.toDateString() === targetDate.toDateString();
         });
 
         if (!reservedSlotsForDate) {
-            reservedSlotsForDate = { date: targetDate, reserved: [] };
+            reservedSlotsForDate = { date: targetDate.toISOString().split('T')[0], reserved: [] };
             court.reservedSlots.push(reservedSlotsForDate);
         }
 
-        // Check if any of the time slots are already reserved
         for (const slot of timeSlots) {
             if (reservedSlotsForDate.reserved.includes(slot)) {
                 return res.status(409).json({ error: `Time slot ${slot} already reserved` });
             }
         }
 
-        // Add the reserved time slots
         reservedSlotsForDate.reserved.push(...timeSlots);
         await court.save();
 
-        // Create a reservation record
         const reservation = new Reservation({
             courtId,
             date: targetDate,

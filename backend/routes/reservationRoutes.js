@@ -7,7 +7,7 @@ const reservationController = require('../controllers/reservationController'); /
 console.log(reservationController); // Add this line to debug
 
 // Route to create a reservation
-router.post('/', reservationController.createReservation);
+router.post('/reservations', reservationController.createReservation);
 
 // Route to get reservations by ground and date
 router.get('/by-ground/:groundId/date/:date', reservationController.getReservationsByGroundAndDate);

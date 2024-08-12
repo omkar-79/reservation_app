@@ -5,27 +5,60 @@ const Court = require('../models/Court');
 
 // Helper functions
 const timeSlotToMinutes = (timeSlot) => {
-    const [start, end] = timeSlot.split('-');
-    const [startHour, startMinute] = start.split(':').map(Number);
-    const [endHour, endMinute] = end.split(':').map(Number);
-    return {
-        start: startHour * 60 + startMinute,
-        end: endHour * 60 + endMinute
-    };
+    console.log('Time Slot Received:', timeSlot); // Log the time slot
+    
+    if (typeof timeSlot !== 'string') {
+        throw new TypeError('Time slot must be a string');
+    }
+
+    const [time, period] = timeSlot.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+
+    if (period === 'PM' && hours !== 12) {
+        hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+        hours = 0;
+    }
+
+    return hours * 60 + minutes;
 };
 
-const isOverlap = (slots1, slots2) => {
-    for (let slot1 of slots1) {
-        const { start: start1, end: end1 } = timeSlotToMinutes(slot1);
-        for (let slot2 of slots2) {
-            const { start: start2, end: end2 } = timeSlotToMinutes(slot2);
-            if (start1 < end2 && end1 > start2) {
-                return true;
+
+const isOverlap = (slots1, reservedSlots) => {
+    console.log('Requested Slots:', slots1);
+    console.log('Reserved Slots:', reservedSlots);
+
+    // Flatten the reservedSlots to a single array of reserved time slots
+    const allReservedSlots = reservedSlots
+        .filter(reservedSlot => {
+            if (!reservedSlot.date) {
+                console.warn('Reserved slot missing date:', reservedSlot);
+                return false; // Skip entries without a date
             }
+            // Convert the date to a string format for comparison
+            const reservedDate = new Date(reservedSlot.date).toISOString().split('T')[0];
+            return reservedDate === '2024-08-13'; // Use the date from the request
+        })
+        .flatMap(reservedSlot => reservedSlot.reserved || []); // Ensure `reserved` is an array
+
+    console.log('Flattened Reserved Slots:', allReservedSlots);
+
+    // Check for overlaps
+    for (let slot1 of slots1) {
+        if (typeof slot1 !== 'string') {
+            throw new TypeError('Time slot must be a string');
+        }
+        if (allReservedSlots.includes(slot1)) {
+            return true; // Overlap detected
         }
     }
-    return false;
+    return false; // No overlap
 };
+
+
+
+
+
 
 const generateUniqueId = () => {
     return 'RES-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -34,6 +67,7 @@ const generateUniqueId = () => {
 // Controller to create a new reservation
 exports.createReservation = async (req, res) => {
     try {
+        console.log('Request body:', req.body); // Log the incoming request
         const { groundId, courtId, date, timeSlots, userId } = req.body;
 
         if (!groundId || !courtId || !date || !timeSlots || !userId) {
@@ -43,17 +77,24 @@ exports.createReservation = async (req, res) => {
         const groundObjectId = new mongoose.Types.ObjectId(groundId);
         const courtObjectId = new mongoose.Types.ObjectId(courtId);
 
+        console.log('Ground ObjectId:', groundObjectId);
+        console.log('Court ObjectId:', courtObjectId);
+
         const court = await Court.findOne({
             groundId: groundObjectId,
             courtId: courtObjectId,
-            date: new Date(date)
+            'timeSlots.date': new Date(date).toISOString().split('T')[0] // Adjusted query for date matching
         });
 
         if (!court) {
+            console.log('Court not found');
             return res.status(404).json({ error: 'Court not found' });
         }
 
-        if (isOverlap(timeSlots, court.timeSlots)) {
+        const reservedSlots = court.reservedSlots || [];
+
+        if (isOverlap(timeSlots, reservedSlots)) {
+            console.log('Overlap detected');
             return res.status(400).json({ error: 'The requested time slots overlap with existing reservations for this court.' });
         }
 
@@ -68,10 +109,14 @@ exports.createReservation = async (req, res) => {
 
         await newReservation.save();
 
-        court.reservations.push({
-            userId,
-            reservationId: newReservation.reservationId,
-            timeSlots
+        // Initialize reservedSlots array if not present
+        if (!court.reservedSlots) {
+            court.reservedSlots = [];
+        }
+
+        court.reservedSlots.push({
+            date: new Date(date),
+            reserved: timeSlots
         });
         await court.save();
 
@@ -81,6 +126,9 @@ exports.createReservation = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
 
 // Controller to get reservations by ground and date
 exports.getReservationsByGroundAndDate = async (req, res) => {
