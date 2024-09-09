@@ -54,7 +54,7 @@ const AuthPage = () => {
         setMessage('Sign up successful!');
 
         // Redirect to login page
-        navigate('/login');
+        navigate('/auth');
       }
     } catch (error) {
       setMessage(`Error: ${error.response ? error.response.data.error : 'An error occurred'}`);

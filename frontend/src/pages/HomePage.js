@@ -23,7 +23,9 @@ const createIcon = (iconUrl) => L.divIcon({
   className: 'bouncing-icon',
   html: `<img src="${iconUrl}" class="custom-icon" />`,
   iconSize: [32, 32],
+  iconAnchor: [16, 32], // Anchor the icon at the bottom center
 });
+
 
 const HomePage = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -142,7 +144,7 @@ const HomePage = () => {
             <Marker
               key={ground._id} // Use _id from MongoDB
               position={[ground.latitude, ground.longitude]}
-              icon={createIcon(icons[ground.type])}
+              icon={createIcon(icons[ground.icon])}
             >
               <Popup>
                 <div style={{ maxWidth: '200px', padding: '10px', textAlign: 'center' }}>

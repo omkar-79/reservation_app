@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch';
+import { useMap } from 'react-leaflet';
+import 'leaflet-geosearch/dist/geosearch.css';
 import 'leaflet/dist/leaflet.css';
 import '../css/RegisterGround.css';
-import Header from '../components/Header'
+import Header from '../components/Header';
 
-const sportsIcons = ['football', 'basketball', 'tennis', 'volleyball'];
+// Import the icons object
+import icons from '../assets/icons';
+
+const sportsIcons = ['football', 'basketball', 'tennis', 'baseball', 'badminton', 'soccer'];
 
 const RegisterGround = () => {
   const [formData, setFormData] = useState({
@@ -67,11 +73,40 @@ const RegisterGround = () => {
     );
   };
 
+  const SearchControl = () => {
+    const map = useMap();
+
+    React.useEffect(() => {
+      const searchControl = new GeoSearchControl({
+        provider: new OpenStreetMapProvider(),
+        style: 'bar',
+        showMarker: true,
+        retainZoomLevel: false,
+        animateZoom: true,
+        autoClose: true,
+        searchLabel: 'Enter address',
+      });
+
+      map.addControl(searchControl);
+      map.on('geosearch/showlocation', (result) => {
+        setFormData({
+          ...formData,
+          latitude: result.location.y,
+          longitude: result.location.x,
+        });
+      });
+
+      return () => map.removeControl(searchControl);
+    }, [map]);
+
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const { name, description, address, latitude, longitude, totalCourts, timings, icon, timeSlotDuration, images } = formData;
-  
+
     try {
       // Register the ground
       const groundResponse = await axios.post('http://localhost:3000/api/grounds/create', {
@@ -84,9 +119,9 @@ const RegisterGround = () => {
         timings,
         icon,
         timeSlotDuration,
-        images // Now this should be properly converted to URLs before sending
+        images
       });
-  
+
       console.log('Ground registered:', groundResponse.data);
       alert('Ground registered successfully!');
     } catch (error) {
@@ -94,9 +129,8 @@ const RegisterGround = () => {
       alert('Failed to register ground.');
     }
   };
-  
+
   return (
-    
     <div className="register-ground">
       <Header />
       <h1>Register New Ground</h1>
@@ -110,7 +144,27 @@ const RegisterGround = () => {
         <label>Address:</label>
         <input type="text" name="address" value={formData.address} onChange={handleChange} required />
 
-        <label>Total Courts:</label>
+        <label>Select the type of sport:</label>
+        <div className="icon-selector">
+          {sportsIcons.map((icon, index) => (
+            <div key={index} className="icon-option">
+              <input
+                type="radio"
+                name="icon"
+                value={icon}
+                checked={formData.icon === icon}
+                onChange={handleChange}
+              />
+              <img src={icons[icon]} alt={icon} />
+            </div>
+          ))}
+        </div>
+
+        <label>
+          {formData.icon === 'football' || formData.icon === 'soccer' || formData.icon === 'baseball'
+            ? 'Total Grounds:'
+            : 'Total Courts:'}
+        </label>
         <input type="number" name="totalCourts" value={formData.totalCourts} onChange={handleChange} required />
 
         <label>Images:</label>
@@ -138,13 +192,6 @@ const RegisterGround = () => {
           onChange={(e) => handleTimeChange('to', e.target.value)}
         />
 
-        <label>Icon:</label>
-        <select name="icon" value={formData.icon} onChange={handleChange}>
-          {sportsIcons.map(icon => (
-            <option key={icon} value={icon}>{icon}</option>
-          ))}
-        </select>
-
         <label>Time Slot Duration (minutes):</label>
         <input
           type="number"
@@ -154,11 +201,15 @@ const RegisterGround = () => {
         />
 
         <div className="map-container">
-          <MapContainer center={[formData.latitude, formData.longitude]} zoom={13} style={{ height: '400px', width: '100%' }}>
+          <MapContainer
+            center={[formData.latitude, formData.longitude]}
+            zoom={13}
+            style={{ height: "400px", width: "100%" }}
+          >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+            <SearchControl />
             <LocationPicker />
           </MapContainer>
         </div>

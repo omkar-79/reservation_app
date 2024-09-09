@@ -23,7 +23,7 @@ const Header = () => {
               <Nav.Link href="#about">About</Nav.Link>
               <Nav.Link href="#features">Features</Nav.Link>
               <Nav.Link href="#contact">Contact</Nav.Link>
-              <Button variant="outline-light" onClick={handleRegisterGroundClick}>Register Ground</Button>
+              <Button variant="outline-light" onClick={handleRegisterGroundClick}>Register a facility</Button>
             </Nav>
           </Navbar.Collapse>
         </Container>

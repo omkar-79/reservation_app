@@ -41,7 +41,7 @@ exports.createCourts = async (req, res) => {
 
         // For each court ID, create time slots for each day
         for (const courtId of courtIds) {
-            for (let date = new Date(); date <= new Date('2024-08-15'); date.setDate(date.getDate() + 1)) {
+            for (let date = new Date(); date <= new Date('2024-08-31'); date.setDate(date.getDate() + 1)) {
                 const courtData = {
                     groundId,
                     courtId,

@@ -20,6 +20,8 @@
     color: #333; /* Ensure text color is visible */
   }
   
+
+  
   .register-ground input[type="number"],
   .register-ground input[type="text"],
   .register-ground input[type="file"] {
@@ -62,10 +64,11 @@
     object-fit: cover;
   }
   /* Map container styling */
-.map-container {
-    margin-bottom: 15px;
-    height: 300px;
+  .map-container {
+    position: relative;
+    z-index: 500;
   }
+  
   
   .map-container .map {
     height: 100%;
@@ -118,5 +121,79 @@
     margin-top: 20px;
     height: 400px;
     width: 100%;
+  }
+  
+  /* Icon radio buttons styling */
+  .icon-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .icon-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .icon-option input[type="radio"] {
+    margin-bottom: 5px;
+  }
+  
+  .icon-option img {
+    width: 40px; /* Adjust the size as needed */
+    height: 40px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .leaflet-control-geosearch form input {
+    min-width: 200px;
+    width: 100%;
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    height: 30px;
+    border-radius: 0 4px 4px 0;
+    text-indent: 8px;
+    color: #000; /* Ensure text color is black */
+    background-color: #fff; /* Ensure background is white */
+  }
+  
+  .leaflet-control-geosearch .results > * {
+    line-height: 24px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000; /* Ensure text color is black */
+  }
+  
+  .leaflet-control-geosearch .results > .active,
+  .leaflet-control-geosearch .results > :hover {
+    background-color: #f8f8f8;
+    border-color: #c6c6c6;
+    cursor: pointer;
+    color: #000; /* Ensure text color is black */
+  }
+  .leaflet-control-geosearch a.reset {
+    color: black;
+    position: absolute;
+    top: 50%; /* Align vertically */
+    right: 10px; /* Adjust distance from the right edge */
+    transform: translateY(-50%); /* Center vertically */
+    padding: 0 8px;
+    height: 30px; /* Match the height of the input field */
+    line-height: 30px; /* Center the text/icon vertically */
+    cursor: pointer;
+    border: none;
+  }
+  
+  .leaflet-control-geosearch a.reset:hover {
+    background: #f5f5f5;
   }
   

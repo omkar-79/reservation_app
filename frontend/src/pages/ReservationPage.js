@@ -153,7 +153,7 @@ const handleReservation = async () => {
 
                 {/* Date Selection */}
                 <div className="date-selection">
-    <label htmlFor="reservation-date">Select Date:</label>
+    <label htmlFor="reservation-date">Select Date</label>
     <input
         type="date"
         id="reservation-date"
@@ -166,10 +166,12 @@ const handleReservation = async () => {
     />
 </div>
 
-
+                <div className='court-label'>
+                <h3>Select Court</h3> 
+                </div>
                 {/* Court Selection Section */}
-                <div className="court-list">
-                {courts.map((court) => {
+                <div className="court-list"> 
+                {courts.map((court, index) => {
     console.log('Court object:', court); // Log court object (which is the court ID string)
     return (
         <div
@@ -178,7 +180,7 @@ const handleReservation = async () => {
             onClick={() => handleCourtClick(court)} // Pass court directly
         >
             <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
-            Court {court} {/* Display the court ID */}
+            <div className="court-number">Court {index + 1}</div> 
         </div>
     );
 })}

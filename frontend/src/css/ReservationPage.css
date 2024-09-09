@@ -1,8 +1,10 @@
 /* Container for the reservation details */
 .reservation-page {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  margin: 0;
+  text-align: center;
 }
 
 /* Heading styles */
@@ -13,35 +15,58 @@
     color: #333;
 }
 
-/* Information section */
+/* Information section as a card */
 .reservation-info {
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card-like shadow */
+    margin-bottom: 20px;
+    max-width: 800px; /* Optional: Set a max-width to control the card size */
+    margin: 20px auto; /* Center the card horizontally */
+    transition: transform 0.2s, box-shadow 0.2s; /* Animation for hover effect */
+}
+
+.reservation-info:hover {
+    transform: translateY(-5px); /* Move the card up slightly */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
 }
 
 /* Details text */
 .reservation-info h2 {
-    font-size: 1.5rem;
-    color: #333; /* Ensure heading color is dark */
+    font-size: 1.8rem;
+    color: #333; /* Dark color for the heading */
+    margin-bottom: 10px;
 }
 
 .reservation-info p {
-    font-size: 1rem;
-    color: #555; /* Ensure text color is readable */
+    font-size: 1.1rem;
+    color: #555; /* Slightly muted color for the text */
     line-height: 1.6;
+    margin: 10px 0;
 }
+
+.reservation-info strong {
+    color: #000; /* Make labels bold and black */
+}
+
 
 /* Date selection */
 .date-selection {
-    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card-like shadow */
+    margin-bottom: 20px;
+    max-width: 800px; /* Optional: Set a max-width to control the card size */
+    margin: 20px auto; /* Center the card horizontally */
+    transition: transform 0.2s, box-shadow 0.2s; /* Animation for hover effect */
 }
 
 .date-selection label {
     display: block;
     margin-bottom: 10px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #333;
 }
 
@@ -58,27 +83,57 @@
 }
 
 .court-availability h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: #333;
     margin-bottom: 15px;
 }
 
 .court-list {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow multiple cards in a row */
+    gap: 20px; /* Space between cards */
+    margin-top: 20px;
+}
+
+.court-label h3 {
+    font-size: 1.1rem;
+    color: #333; /* Ensure heading color is dark and readable */
+    margin-bottom: 15px; /* Space between the heading and the court cards */
+    text-align: center;
+}
+
+.court-number {
+    font-size: 1.1rem; /* Adjust font size as needed */
+    color: #333; /* Ensure the text is dark and readable */
+    margin-top: 10px; /* Space above the number */
 }
 
 .court {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px; /* Slightly reduce padding for better alignment */
+    text-align: center;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block; /* Ensure cards line up horizontally */
+}
+
+/* Icon styling */
+.court .court-icon {
+    width: 100px; /* Set a fixed size for the icon */
+    height: auto; /* Keep the aspect ratio */
+    margin-bottom: 10px;
+}
+
+/* Dynamically set the width of the card based on the icon size */
+.court {
+    width: calc(100px + 40px); /* Icon width + padding on both sides */
+}
+
+.court:hover {
+    transform: translateY(-5px); /* Move the card up slightly */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .court.available {
@@ -92,13 +147,22 @@
 }
 
 .court.selected {
-    background-color: #cce5ff;
-    border-color: #b8daff;
+    border: 2px solid #4CAF50; /* Highlight selected court */
 }
 
 .court-icon {
     width: 64px;
     height: 64px;
+}
+.court img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.court p {
+    font-size: 1.1rem;
+    color: #333;
 }
 
 /* Time slot selection */
@@ -107,7 +171,7 @@
 }
 
 .time-slot-selection h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: #333;
     margin-bottom: 15px;
 }
@@ -124,7 +188,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa;
+    background-color: #47a143;
     border: 2px solid #ddd;
     border-radius: 8px;
     cursor: pointer;
@@ -133,23 +197,23 @@
 }
 
 .time-slot.selected {
-    background-color: #cce5ff;
-    border-color: #b8daff;
+    background-color: #64afff;
+    border-color: #007bef;
 }
 
 /* Button styles */
+/* Button styles */
 .reserve-button {
-    display: block;
-    width: 100%;
+    display: inline-block; /* Inline block so it adapts to the text width */
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px;
+    padding: 10px 20px; /* Adjust padding for a balanced look */
     text-align: center;
     font-size: 1rem;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 20px auto 0 auto; /* Center the button using auto margins */
     text-decoration: none;
 }
 
