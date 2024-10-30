@@ -17,6 +17,7 @@ const groundSchema = new mongoose.Schema({
     required: true
   },
   timeSlotDuration: Number,
+  courtIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Court' }] // Add this line
 });
 
 module.exports = mongoose.model('Ground', groundSchema);

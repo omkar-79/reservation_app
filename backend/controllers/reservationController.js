@@ -3,122 +3,68 @@ const Ground = require('../models/Ground');
 const Reservation = require('../models/Reservation');
 const Court = require('../models/Court');
 
-// Helper functions
-const timeSlotToMinutes = (timeSlot) => {
-    console.log('Time Slot Received:', timeSlot); // Log the time slot
-    
-    if (typeof timeSlot !== 'string') {
-        throw new TypeError('Time slot must be a string');
+// Helper function to update court slots availability
+const updateCourtSlotsAvailability = async (courtId, date, timeSlotIds) => {
+    const court = await Court.findOne({ courtId: courtId });
+
+    if (!court) {
+        throw new Error('Court not found');
     }
 
-    const [time, period] = timeSlot.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
+    // Find the specific date in court's timeSlots
+    const dateSlot = court.timeSlots.find(slot => slot.date.toISOString().split('T')[0] === date);
 
-    if (period === 'PM' && hours !== 12) {
-        hours += 12;
-    } else if (period === 'AM' && hours === 12) {
-        hours = 0;
+    if (!dateSlot) {
+        throw new Error('Date not available');
     }
 
-    return hours * 60 + minutes;
-};
-
-
-const isOverlap = (slots1, reservedSlots) => {
-    console.log('Requested Slots:', slots1);
-    console.log('Reserved Slots:', reservedSlots);
-
-    // Flatten the reservedSlots to a single array of reserved time slots
-    const allReservedSlots = reservedSlots
-        .filter(reservedSlot => {
-            if (!reservedSlot.date) {
-                console.warn('Reserved slot missing date:', reservedSlot);
-                return false; // Skip entries without a date
-            }
-            // Convert the date to a string format for comparison
-            const reservedDate = new Date(reservedSlot.date).toISOString().split('T')[0];
-            return reservedDate === '2024-08-13'; // Use the date from the request
-        })
-        .flatMap(reservedSlot => reservedSlot.reserved || []); // Ensure `reserved` is an array
-
-    console.log('Flattened Reserved Slots:', allReservedSlots);
-
-    // Check for overlaps
-    for (let slot1 of slots1) {
-        if (typeof slot1 !== 'string') {
-            throw new TypeError('Time slot must be a string');
+    // Update availability for each selected time slot
+    dateSlot.slots.forEach(slot => {
+        if (timeSlotIds.includes(slot._id.toString())) {
+            slot.available = false;
         }
-        if (allReservedSlots.includes(slot1)) {
-            return true; // Overlap detected
-        }
-    }
-    return false; // No overlap
+    });
+
+    await court.save();
 };
-
-
-
-
-
-
+// Function to generate a unique reservation ID
 const generateUniqueId = () => {
     return 'RES-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 };
 
-// Controller to create a new reservation
+
 exports.createReservation = async (req, res) => {
     try {
-        console.log('Request body:', req.body); // Log the incoming request
+        console.log('Request body:', req.body);
         const { groundId, courtId, date, timeSlots, userId } = req.body;
 
         if (!groundId || !courtId || !date || !timeSlots || !userId) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        const groundObjectId = new mongoose.Types.ObjectId(groundId);
-        const courtObjectId = new mongoose.Types.ObjectId(courtId);
+        const trimmedGroundId = groundId.trim();
+        const trimmedCourtId = courtId.trim();
+        const reservationDate = new Date(date).toISOString().split('T')[0];
 
-        console.log('Ground ObjectId:', groundObjectId);
-        console.log('Court ObjectId:', courtObjectId);
-
-        const court = await Court.findOne({
-            groundId: groundObjectId,
-            courtId: courtObjectId,
-            'timeSlots.date': new Date(date).toISOString().split('T')[0] // Adjusted query for date matching
-        });
-
-        if (!court) {
-            console.log('Court not found');
-            return res.status(404).json({ error: 'Court not found' });
+        // Find and validate the ground
+        const ground = await Ground.findById(trimmedGroundId);
+        if (!ground) {
+            return res.status(404).json({ error: 'Ground not found' });
         }
 
-        const reservedSlots = court.reservedSlots || [];
-
-        if (isOverlap(timeSlots, reservedSlots)) {
-            console.log('Overlap detected');
-            return res.status(400).json({ error: 'The requested time slots overlap with existing reservations for this court.' });
-        }
+        // Update court slots' availability
+        await updateCourtSlotsAvailability(trimmedCourtId, reservationDate, timeSlots);
 
         const newReservation = new Reservation({
-            groundId: groundObjectId,
-            courtId: courtObjectId,
+            groundId: trimmedGroundId,
+            courtId: trimmedCourtId,
             date: new Date(date),
-            timeSlots,
+            timeSlots: timeSlots, // Store ObjectIds directly
             userId,
             reservationId: generateUniqueId()
         });
 
         await newReservation.save();
-
-        // Initialize reservedSlots array if not present
-        if (!court.reservedSlots) {
-            court.reservedSlots = [];
-        }
-
-        court.reservedSlots.push({
-            date: new Date(date),
-            reserved: timeSlots
-        });
-        await court.save();
 
         res.status(201).json(newReservation);
     } catch (error) {
@@ -126,8 +72,6 @@ exports.createReservation = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
-
 
 
 // Controller to get reservations by ground and date
@@ -141,12 +85,13 @@ exports.getReservationsByGroundAndDate = async (req, res) => {
 
         const groundObjectId = new mongoose.Types.ObjectId(groundId);
 
-        const courts = await Court.find({
-            groundId: groundObjectId,
-            date: new Date(date)
-        });
+        const courts = await Court.find({ groundId: groundObjectId });
 
-        const reservations = courts.flatMap(court => court.reservations);
+        const reservations = await Reservation.find({
+            groundId: groundObjectId,
+            date: { $eq: new Date(date) },
+            courtId: { $in: courts.map(court => court._id) }
+        });
 
         res.json(reservations);
     } catch (error) {

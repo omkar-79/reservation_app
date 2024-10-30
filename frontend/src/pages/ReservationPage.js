@@ -3,11 +3,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { tennisCourtIcon } from '../assets/facility';
 import '../css/ReservationPage.css';
-import Header from '../components/Header'
+import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-
-
 
 const ReservationPage = () => {
     const { id } = useParams(); // Get the ground ID from the URL
@@ -18,9 +16,7 @@ const ReservationPage = () => {
     const [ground, setGround] = useState(null);
     const [courts, setCourts] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
-    // Inside your component:
-const navigate = useNavigate();
-
+    const navigate = useNavigate();
 
     // Function to fetch ground details and courts
     const fetchGroundAndCourts = useCallback(async () => {
@@ -40,21 +36,19 @@ const navigate = useNavigate();
     // Function to fetch available time slots
     const fetchAvailableTimeSlots = useCallback(async () => {
         if (!selectedDate || !selectedCourt) return;
-    
+
         console.log("Fetching time slots for Court:", selectedCourt, "Date:", selectedDate); // Log to debug
-    
+
         try {
             const response = await axios.get(`http://localhost:3000/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
             console.log("Fetched time slots:", response.data); // Log API response
-    
+
             // Ensure the correct data is being set
             setTimeSlots(response.data.timeSlots || []); // Safely set timeSlots array or an empty array
         } catch (error) {
             console.error('Error fetching available time slots', error);
         }
     }, [selectedDate, selectedCourt]);
-    
-    
 
     // Fetch ground and courts on component mount
     useEffect(() => {
@@ -67,7 +61,6 @@ const navigate = useNavigate();
             fetchAvailableTimeSlots();
         }
     }, [fetchAvailableTimeSlots, selectedDate, selectedCourt]);
-    
 
     // Handle court selection
     const handleCourtClick = (courtId) => {
@@ -78,19 +71,16 @@ const navigate = useNavigate();
             console.error('Invalid courtId:', courtId);
         }
     };
-    
 
     // Handle time slot selection
-    const handleSlotClick = (slot) => {
+    const handleSlotClick = (slotId) => {
         setSelectedSlots((prev) =>
-            prev.includes(slot)
-                ? prev.filter(s => s !== slot)
-                : [...prev, slot]
+            prev.includes(slotId)
+                ? prev.filter(s => s !== slotId)
+                : [...prev, slotId]
         );
     };
 
-
-    
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         if (newDate) {
@@ -99,45 +89,41 @@ const navigate = useNavigate();
             console.error('Invalid date:', newDate);
         }
     };
-    
+
     // Handle reservation submission
-// Handle reservation submission
-const handleReservation = async () => {
-    try {
-        // Retrieve the token from localStorage
-        const token = localStorage.getItem('token');
+    const handleReservation = async () => {
+        try {
+            const token = localStorage.getItem('token');
 
-        // Check if the user is authenticated
-        if (!token) {
-            alert('You must be logged in to make a reservation');
-            navigate('/auth');
-            return;
-        }
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId;
-
-        await axios.post(
-            'http://localhost:3000/api/reservations',
-            {
-                groundId: id,
-                userId: userId, // Replace with actual user ID
-                date: selectedDate,
-                timeSlots: selectedSlots,
-                courtId: selectedCourt,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-                },
+            if (!token) {
+                alert('You must be logged in to make a reservation');
+                navigate('/auth');
+                return;
             }
-        );
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.userId;
 
-        alert('Reservation created successfully!');
-    } catch (error) {
-        alert('Error creating reservation');
-    }
-};
+            await axios.post(
+                'http://localhost:3000/api/reservations',
+                {
+                    groundId: id,
+                    userId: userId,
+                    date: selectedDate,
+                    timeSlots: selectedSlots,
+                    courtId: selectedCourt,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
+            alert('Reservation created successfully!');
+        } catch (error) {
+            alert('Error creating reservation');
+        }
+    };
 
     if (!ground) return <div>Loading...</div>;
 
@@ -153,74 +139,66 @@ const handleReservation = async () => {
 
                 {/* Date Selection */}
                 <div className="date-selection">
-    <label htmlFor="reservation-date">Select Date</label>
-    <input
-        type="date"
-        id="reservation-date"
-        value={selectedDate}
-        onChange={(e) => {
-            const newDate = e.target.value;
-            setSelectedDate(newDate);
-            console.log("Selected Date:", newDate); // Log the selected date
-        }}
-    />
-</div>
+                    <label htmlFor="reservation-date">Select Date</label>
+                    <input
+                        type="date"
+                        id="reservation-date"
+                        value={selectedDate}
+                        onChange={(e) => {
+                            const newDate = e.target.value;
+                            setSelectedDate(newDate);
+                            console.log("Selected Date:", newDate);
+                        }}
+                    />
+                </div>
 
                 <div className='court-label'>
-                <h3>Select Court</h3> 
+                    <h3>Select Court</h3> 
                 </div>
+
                 {/* Court Selection Section */}
                 <div className="court-list"> 
-                {courts.map((court, index) => {
-    console.log('Court object:', court); // Log court object (which is the court ID string)
-    return (
-        <div
-            key={court} // Use court directly as it's already the ID
-            className={`court ${selectedCourt === court ? 'selected' : ''}`} // Compare selectedCourt with court directly
-            onClick={() => handleCourtClick(court)} // Pass court directly
-        >
-            <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
-            <div className="court-number">Court {index + 1}</div> 
-        </div>
-    );
-})}
-
-
+                    {courts.map((court, index) => {
+                        console.log('Court object:', court); // Log court object
+                        return (
+                            <div
+                                key={court} 
+                                className={`court ${selectedCourt === court ? 'selected' : ''}`} 
+                                onClick={() => handleCourtClick(court)} 
+                            >
+                                <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
+                                <div className="court-number">Court {index + 1}</div> 
+                            </div>
+                        );
+                    })}
                 </div>
 
-
-
-
                 <div className="time-slot-selection">
-    <h3>Select Time Slots</h3>
-    <div className="time-slots">
-        {timeSlots.length > 0 ? (
-            timeSlots.map((slot, index) => {
-                if (typeof slot !== 'string') {
-                    console.error('Invalid time slot format:', slot);
-                    return null; // or handle accordingly
-                }
-                console.log('Rendering slot:', slot); // Log each slot
-                return (
-                    <div
-                        key={index}
-                        className={`time-slot ${selectedSlots.includes(slot) ? 'selected' : ''}`}
-                        onClick={() => handleSlotClick(slot)}
-                    >
-                        {slot} {/* Display the time slot */}
+                    <h3>Select Time Slots</h3>
+                    <div className="time-slots">
+                        {timeSlots.length > 0 ? (
+                            timeSlots.map((slot, index) => {
+                                const slotClass = slot.available ? 'time-slot available' : 'time-slot unavailable'; // Determine class based on availability
+                                const isSelected = selectedSlots.includes(slot._id); // Check if slot is selected
+                                return (
+                                    <div
+                                        key={slot._id} // Use the slot ID as the key
+                                        className={`${slotClass} ${isSelected ? 'selected' : ''}`} // Use slot ID for selected state
+                                        onClick={() => {
+                                            if (slot.available) { // Only allow click if available
+                                                handleSlotClick(slot._id);
+                                            }
+                                        }}
+                                    >
+                                        {slot.start} - {slot.end} {/* Display the time slot */}
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <p>No time slots available</p>
+                        )}
                     </div>
-                );
-            })
-        ) : (
-            <p>No time slots available</p>
-        )}
-    </div>
-</div>
-
-
-
-                {/* Time Slot Selection */}
-                
+                </div>
 
                 <button className="reserve-button" onClick={handleReservation}>Reserve Now</button>
             </div>

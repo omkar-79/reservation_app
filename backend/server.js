@@ -19,7 +19,7 @@ app.use(express.json()); // Middleware to parse JSON
 
 // Routes
 app.use('/users', userRoutes);
-app.use('/api/grounds', groundRoutes);
+app.use('/api/', groundRoutes);
 app.use('/api/', reservationRoutes);
 app.use('/api/', courtRoutes);
 

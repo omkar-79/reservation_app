@@ -182,24 +182,34 @@
     gap: 10px;
 }
 
+.available {
+    background-color: green; /* Color for available slots */
+    color: white; /* Text color for visibility */
+}
+
+.unavailable {
+    background-color: red; /* Color for unavailable slots */
+    color: white; /* Text color for visibility */
+}
+
 .time-slot {
-    width: 100px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #47a143;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 10px;
+    margin: 5px;
     cursor: pointer;
-    text-align: center;
-    font-size: 0.875rem;
+    border-radius: 5px;
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
 }
 
 .time-slot.selected {
-    background-color: #64afff;
-    border-color: #007bef;
+    background-color: blue; /* Color for selected slots */
+    color: white; /* Text color for visibility */
 }
+
+.time-slot:hover {
+    opacity: 0.8; /* Optional: Add hover effect for better UX */
+}
+
+
 
 /* Button styles */
 /* Button styles */

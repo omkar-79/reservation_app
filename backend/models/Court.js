@@ -1,3 +1,4 @@
+// courtmodel.js
 const mongoose = require('mongoose');
 
 const courtSchema = new mongoose.Schema({
@@ -7,8 +8,9 @@ const courtSchema = new mongoose.Schema({
         required: true
     },
     courtId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+        type: String,
+        required: true,
+        unique: true // Ensures that each court has a unique identifier
     },
     timeSlots: [
         {
@@ -16,7 +18,13 @@ const courtSchema = new mongoose.Schema({
                 type: Date,
                 required: true
             },
-            slots: [String] // Array of available time slots as strings
+            slots: [
+                {
+                    start: String, // Start time
+                    end: String,   // End time
+                    available: { type: Boolean, default: true } // Is slot available?
+                }
+            ]
         }
     ],
     reservedSlots: [

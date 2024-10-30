@@ -1,7 +1,9 @@
 .register-ground {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  margin: 0;
+  text-align: center;
     font-family: Arial, sans-serif; /* Ensure text visibility with a readable font */
   }
   

@@ -1,20 +1,25 @@
+// reservationModel.js
 const mongoose = require('mongoose');
 
 const reservationSchema = new mongoose.Schema({
     groundId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ground',  // Reference to the Ground model
+        ref: 'Ground',
         required: true
     },
     courtId: {
-        type: mongoose.Schema.Types.ObjectId,  // Assuming courtId is a number and is directly stored in Ground
+        type: String,
         required: true
     },
     date: {
         type: Date,
         required: true
     },
-    timeSlots: [String],  // Array of selected time slots
+    timeSlots: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Court.timeSlots.slots', // Reference to slots in the court model
+        required: true
+    }],
     userId: {
         type: String,
         required: true

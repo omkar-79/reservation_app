@@ -6,7 +6,7 @@ const courtController = require('../controllers/courtController');
 router.get('/courts/by-ground/:groundId', courtController.getCourtsByGroundId);
 router.get('/courts/:courtId/time-slots/:date', courtController.getTimeSlotsByCourtAndDate);
 router.post('/courts/reserve', courtController.reserveTimeSlot); // Route for reserving a time slot
-router.post('/courts/create', courtController.createCourts); // Route for creating courts
-
+router.post('/courts/create', courtController.createCourtsForGround); // Route for creating courts
+router.get('/courts', courtController.getAllCourts);
 
 module.exports = router;
