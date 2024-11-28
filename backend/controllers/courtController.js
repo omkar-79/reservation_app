@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 exports.getAllCourts = async (req, res) => {
     try {
         // Fetch all court documents
-        const courts = await Court.find().populate('groundId'); // Optional: Populate groundId if needed
+        const courts = await Court.find(); // Optional: Populate groundId if needed
 
         res.json(courts);
     } catch (error) {
@@ -44,13 +44,15 @@ exports.createCourtsForGround = async (req, res) => {
     const createdCourts = [];
     const { from, to } = timings;
 
-    for (let i = 1; i <= totalCourts; i++) {
+    for (let i = 0; i < totalCourts; i++) {
         const courtId = `Court-${uuidv4()}`;// Unique identifier for each court
+        const courtName = `Court-${i + 1}`;
         const timeSlots = generateTimeSlots(from, to, timeSlotDuration);
         
         const newCourt = new Court({
             groundId: req.body.groundId, // Assumes groundId is in the request body
             courtId,
+            courtName,
             timeSlots: [{ date: new Date(), slots: timeSlots }], // Store slots for today
             reservedSlots: [] // Initially empty
         });
@@ -201,6 +203,30 @@ exports.reserveTimeSlot = async (req, res) => {
         res.json({ message: 'Time slot reserved successfully' });
     } catch (error) {
         console.error('Error reserving time slot', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// Function to fetch court name by courtId
+exports.getCourtNameByCourtId = async (req, res) => {
+    try {
+        const { courtId } = req.body; // Get the courtId from the URL params
+
+        if (!courtId) {
+            return res.status(400).json({ error: 'Court ID is required' });
+        }
+
+        // Find the court by its courtId
+        const court = await Court.findOne({ courtId: courtId });
+
+        if (!court) {
+            return res.status(404).json({ error: 'Court not found' });
+        }
+
+        // Return the courtName
+        res.json({ courtName: court.courtName });
+    } catch (error) {
+        console.error('Error fetching court name:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

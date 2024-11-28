@@ -8,5 +8,6 @@ router.get('/courts/:courtId/time-slots/:date', courtController.getTimeSlotsByCo
 router.post('/courts/reserve', courtController.reserveTimeSlot); // Route for reserving a time slot
 router.post('/courts/create', courtController.createCourtsForGround); // Route for creating courts
 router.get('/courts', courtController.getAllCourts);
+router.post('/courts/name', courtController.getCourtNameByCourtId); // Route for updating courts
 
 module.exports = router;

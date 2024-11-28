@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Ground = require('../models/Ground');
 const Reservation = require('../models/Reservation');
 const Court = require('../models/Court');
+const User = require('../models/User');
 
 // Helper function to update court slots availability
 const updateCourtSlotsAvailability = async (courtId, date, timeSlotIds) => {
@@ -36,9 +37,9 @@ const generateUniqueId = () => {
 exports.createReservation = async (req, res) => {
     try {
         console.log('Request body:', req.body);
-        const { groundId, courtId, date, timeSlots, userId } = req.body;
+        const { groundId, courtId, date, timeSlotIds, timeSlots, userId, courtName } = req.body;
 
-        if (!groundId || !courtId || !date || !timeSlots || !userId) {
+        if (!groundId || !courtId || !date || !timeSlotIds || !userId) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
@@ -48,18 +49,32 @@ exports.createReservation = async (req, res) => {
 
         // Find and validate the ground
         const ground = await Ground.findById(trimmedGroundId);
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (user.role !== 'Reservee') {
+            return res.status(403).json({ message: 'Only users with the Reservee role can make a reservation.' });
+        }
+
         if (!ground) {
             return res.status(404).json({ error: 'Ground not found' });
         }
 
+        
+
         // Update court slots' availability
-        await updateCourtSlotsAvailability(trimmedCourtId, reservationDate, timeSlots);
+        await updateCourtSlotsAvailability(trimmedCourtId, reservationDate, timeSlotIds);
 
         const newReservation = new Reservation({
             groundId: trimmedGroundId,
             courtId: trimmedCourtId,
+            courtName,
             date: new Date(date),
-            timeSlots: timeSlots, // Store ObjectIds directly
+            timeSlotIds: timeSlotIds, // Store ObjectIds directly
+            timeSlots,
             userId,
             reservationId: generateUniqueId()
         });
@@ -94,6 +109,25 @@ exports.getReservationsByGroundAndDate = async (req, res) => {
         });
 
         res.json(reservations);
+    } catch (error) {
+        console.error('Error fetching reservations', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// Controller to get all reservations
+exports.getAllReservations = async (req, res) => {
+    try {
+        // Fetch all reservations from the database
+        const reservations = await Reservation.find();
+
+        // Check if reservations exist
+        if (reservations.length === 0) {
+            return res.status(404).json({ message: 'No reservations found' });
+        }
+
+        // Return the list of reservations
+        res.status(200).json(reservations);
     } catch (error) {
         console.error('Error fetching reservations', error);
         res.status(500).json({ error: 'Internal server error' });

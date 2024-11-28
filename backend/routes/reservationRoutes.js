@@ -11,5 +11,6 @@ router.post('/reservations', reservationController.createReservation);
 
 // Route to get reservations by ground and date
 router.get('/by-ground/:groundId/date/:date', reservationController.getReservationsByGroundAndDate);
+router.get('/reservationsall', reservationController.getAllReservations);
 
 module.exports = router;

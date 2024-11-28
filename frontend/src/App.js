@@ -7,6 +7,7 @@ import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import RegisterGround from './pages/RegisterGround';
 import ReservationPage from './pages/ReservationPage';  // Import the signup/login page
+import ProfilePage from './pages/ReserveeProfile';
 import { GoogleOAuthProvider } from '@react-oauth/google'; 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/map" element={<HomePage />} />
+        <Route path="/reservee" element={<ProfilePage />} />
         <Route path="/reservation/:id" element={<ReservationPage />} />
         <Route path="/register-ground" element={<RegisterGround />} /> 
       </Routes>

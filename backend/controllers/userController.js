@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Reservation = require('../models/Reservation');
+const Court = require('../models/Court');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { decodeJwt } = require('@react-oauth/google');
@@ -62,7 +64,7 @@ exports.loginUser = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, username: user.username },
+      { userId: user._id, username: user.username, role: user.role }, // Attach user details to the token
       JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
@@ -106,6 +108,75 @@ exports.googleSignIn = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Controller to get the user profile with reservations
+exports.getReserveeProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId; // userId is attached to req.user from the authenticateToken middleware
+    console.log('Received userId from middleware:', userId);
+
+    // Fetch user details
+    const user = await User.findById(userId);
+    console.log('Fetched user details:', user);
+
+    if (!user) {
+      console.log('User not found for userId:', userId);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the user is a Reservee
+    if (user.role !== 'Reservee') {
+      console.log('Access forbidden: User role is not Reservee:', user.role);
+      return res.status(403).json({ error: 'Access forbidden: only Reservee can access this profile' });
+    }
+
+    // Fetch reservations for the user
+    console.log('Fetching reservations for userId:', userId);
+    const reservations = await Reservation.find({ userId: userId })
+      .populate({
+        path: 'groundId',
+        select: 'name address' // Fetch only the 'name' field from Ground
+      })
+      .populate({
+        path: 'courtId', // Adjust this to reference Court schema directly
+        select: 'courtName', // Ensure you're fetching valid court data
+      });
+
+    console.log('Fetched reservations:', reservations);
+
+    // Process timeSlots field (handle the nested timeSlots field directly)
+    const processedReservations = reservations.map(reservation => ({
+      reservationId: reservation.reservationId,
+      groundName: reservation.groundId?.name || 'Unknown Ground',
+      groundAddress: reservation.groundId?.address || 'Unknown Address',
+      courtName: reservation.courtName,
+      timeSlots: reservation.timeSlots.map(slot => {
+        // Ensure we are processing the 'start' and 'end' times correctly
+        if (slot.start && slot.end) {
+          return {
+            start: slot.start,
+            end: slot.end
+          };
+        }
+        return { start: 'Unknown Start', end: 'Unknown End' }; // Handle invalid or missing timeSlots
+      }),
+      date: reservation.date,
+    }));
+
+    const response = {
+      username: user.username,
+      email: user.email,
+      reservations: processedReservations,
+    };
+
+    console.log('Response data prepared:', response);
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error in getReserveeProfile:', error);
     res.status(500).json({ error: error.message });
   }
 };

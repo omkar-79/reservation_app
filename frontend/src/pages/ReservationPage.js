@@ -16,6 +16,7 @@ const ReservationPage = () => {
     const [ground, setGround] = useState(null);
     const [courts, setCourts] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
+    const [courtNames, setCourtNames] = useState({});
     const navigate = useNavigate();
 
     // Function to fetch ground details and courts
@@ -32,6 +33,19 @@ const ReservationPage = () => {
             console.error('Error fetching ground details and courts', error);
         }
     }, [id]);
+
+    // Function to fetch court name by courtId
+    const fetchCourtName = async (courtId) => {
+        console.log('Fetching court name:', courtId); // Log to debug
+        try {
+            const response = await axios.post('http://localhost:3000/api/courts/name', { courtId });
+            return response.data.courtName;
+        } catch (error) {
+            console.error('Error fetching court name:', error);
+            return `Court ${courtId}`; // Fallback if name fetch fails
+        }
+    };
+
 
     // Function to fetch available time slots
     const fetchAvailableTimeSlots = useCallback(async () => {
@@ -61,6 +75,25 @@ const ReservationPage = () => {
             fetchAvailableTimeSlots();
         }
     }, [fetchAvailableTimeSlots, selectedDate, selectedCourt]);
+
+        // Fetch court names when courts are loaded
+        useEffect(() => {
+            const loadCourtNames = async () => {
+                const names = {};
+                for (const court of courts) {
+                    console.log('Court:', court); // Log court object
+                    const name = await fetchCourtName(court);
+                    console.log('Court Name:', name); // Log court name
+                    names[court] = name;
+                }
+                setCourtNames(names);
+            };
+    
+            if (courts.length > 0) {
+                loadCourtNames();
+            }
+        }, [courts]);
+
 
     // Handle court selection
     const handleCourtClick = (courtId) => {
@@ -94,6 +127,7 @@ const ReservationPage = () => {
     const handleReservation = async () => {
         try {
             const token = localStorage.getItem('token');
+            console.log('Token:', token); 
     
             if (!token) {
                 alert('You must be logged in to make a reservation');
@@ -101,7 +135,29 @@ const ReservationPage = () => {
                 return;
             }
             const decodedToken = jwtDecode(token);
+            console.log('Token:', decodedToken); 
             const userId = decodedToken.userId;
+            const userRole = decodedToken.role;
+            console.log('Role:', userRole); // Log to debug
+            
+            if (userRole !== 'Reservee') {
+                alert('Only users with the Reservee role can make a reservation.');
+                return;
+            }
+
+            // Prepare selectedSlots with start and end times
+        const selectedSlotDetails = selectedSlots.map(slotId => {
+            const slot = timeSlots.find(ts => ts._id === slotId); // Match slot ID to fetch its details
+            if (slot) {
+                return {
+                    start: slot.start,
+                    end: slot.end,
+                };
+            }
+            return null; // Skip invalid or unmatched slots
+        }).filter(slot => slot !== null); // Remove null entries
+
+        console.log('Selected Slot Details:', selectedSlotDetails);
     
             await axios.post(
                 'http://localhost:3000/api/reservations',
@@ -109,8 +165,10 @@ const ReservationPage = () => {
                     groundId: id,
                     userId: userId,
                     date: selectedDate,
-                    timeSlots: selectedSlots,
+                    timeSlotIds: selectedSlots,
+                    timeSlots: selectedSlotDetails,
                     courtId: selectedCourt,
+                    courtName: courtNames[selectedCourt],
                 },
                 {
                     headers: {
@@ -160,6 +218,7 @@ const ReservationPage = () => {
                 {/* Court Selection Section */}
                 <div className="court-list"> 
                     {courts.map((court, index) => {
+                        const courtName = courtNames[court];
                         console.log('Court object:', court); // Log court object
                         return (
                             <div
@@ -168,7 +227,7 @@ const ReservationPage = () => {
                                 onClick={() => handleCourtClick(court)} 
                             >
                                 <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
-                                <div className="court-number">Court {index + 1}</div> 
+                                <div className="court-number">{courtName}</div> 
                             </div>
                         );
                     })}

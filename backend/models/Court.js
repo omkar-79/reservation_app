@@ -12,6 +12,10 @@ const courtSchema = new mongoose.Schema({
         required: true,
         unique: true // Ensures that each court has a unique identifier
     },
+    courtName: {
+        type: String,
+        required: true,
+    },
     timeSlots: [
         {
             date: {
