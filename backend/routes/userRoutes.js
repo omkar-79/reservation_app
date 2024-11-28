@@ -9,6 +9,9 @@ router.post('/signup', userController.createUser);
 // Route to log in a user
 router.post('/login', userController.loginUser);
 
+// Route for Google Sign-In
+router.post('/google-signin', userController.googleSignIn);
+
 // Example of a protected route
 router.get('/profile', authenticateToken, (req, res) => {
   res.status(200).json({ message: 'Protected route accessed', user: req.user });

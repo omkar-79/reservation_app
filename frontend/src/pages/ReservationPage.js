@@ -94,7 +94,7 @@ const ReservationPage = () => {
     const handleReservation = async () => {
         try {
             const token = localStorage.getItem('token');
-
+    
             if (!token) {
                 alert('You must be logged in to make a reservation');
                 navigate('/auth');
@@ -102,7 +102,7 @@ const ReservationPage = () => {
             }
             const decodedToken = jwtDecode(token);
             const userId = decodedToken.userId;
-
+    
             await axios.post(
                 'http://localhost:3000/api/reservations',
                 {
@@ -118,8 +118,9 @@ const ReservationPage = () => {
                     },
                 }
             );
-
+    
             alert('Reservation created successfully!');
+            navigate('/map'); // Redirect to the map page after successful reservation
         } catch (error) {
             alert('Error creating reservation');
         }

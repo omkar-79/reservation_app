@@ -7,9 +7,12 @@ import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import RegisterGround from './pages/RegisterGround';
 import ReservationPage from './pages/ReservationPage';  // Import the signup/login page
+import { GoogleOAuthProvider } from '@react-oauth/google'; 
 
 const App = () => {
   return (
+    <GoogleOAuthProvider clientId="28160234456-84o5ki4dee8p2vuf1rs11mbgie03s6m4.apps.googleusercontent.com">
+
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -19,6 +22,7 @@ const App = () => {
         <Route path="/register-ground" element={<RegisterGround />} /> 
       </Routes>
     </Router>
+    </GoogleOAuthProvider>
   );
 };
 

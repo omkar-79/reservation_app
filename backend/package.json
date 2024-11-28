@@ -10,10 +10,14 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.2"
+    "mongoose": "^8.5.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "uuid": "11.0.2"
   }
 }

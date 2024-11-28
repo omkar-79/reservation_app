@@ -7,6 +7,8 @@ import 'leaflet-geosearch/dist/geosearch.css';
 import 'leaflet/dist/leaflet.css';
 import '../css/RegisterGround.css';
 import Header from '../components/Header';
+import { useNavigate } from 'react-router-dom';
+
 
 // Import the icons object
 import icons from '../assets/icons';
@@ -14,6 +16,7 @@ import icons from '../assets/icons';
 const sportsIcons = ['football', 'basketball', 'tennis', 'baseball', 'badminton', 'soccer'];
 
 const RegisterGround = () => {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -124,6 +127,7 @@ const RegisterGround = () => {
 
       console.log('Ground registered:', groundResponse.data);
       alert('Ground registered successfully!');
+      navigate('/map'); // Redirect to /map after successful registration
     } catch (error) {
       console.error('Error registering ground:', error);
       alert('Failed to register ground.');

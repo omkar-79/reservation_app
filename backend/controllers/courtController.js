@@ -3,7 +3,7 @@ const Ground = require('../models/Ground');
 const Reservation = require('../models/Reservation');
 const mongoose = require('mongoose');
 
-
+const { v4: uuidv4 } = require('uuid');
 
 // Function to fetch all courts
 exports.getAllCourts = async (req, res) => {
@@ -45,7 +45,7 @@ exports.createCourtsForGround = async (req, res) => {
     const { from, to } = timings;
 
     for (let i = 1; i <= totalCourts; i++) {
-        const courtId = `Court-${i}`; // Unique identifier for each court
+        const courtId = `Court-${uuidv4()}`;// Unique identifier for each court
         const timeSlots = generateTimeSlots(from, to, timeSlotDuration);
         
         const newCourt = new Court({

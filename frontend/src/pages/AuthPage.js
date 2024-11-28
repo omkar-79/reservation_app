@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import '../css/AuthPage.css';
 
 const AuthPage = () => {
@@ -11,12 +12,20 @@ const AuthPage = () => {
     email: '',
     createpassword: '',
     repeatpassword: '',
+    role: '',
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    console.log(e.target.name, e.target.value); 
+    if (e.target.type === 'radio') {
+      // Update 'role' if it's a radio button
+      setFormData({ ...formData, role: e.target.value });
+    } else {
+      // For other inputs (like text, password, etc.), use e.target.id
+      setFormData({ ...formData, [e.target.id]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,6 +59,8 @@ const AuthPage = () => {
           username: formData.username,
           password: formData.createpassword,
           email: formData.email,
+          role: formData.role,
+
         });
         setMessage('Sign up successful!');
 
@@ -60,6 +71,24 @@ const AuthPage = () => {
       setMessage(`Error: ${error.response ? error.response.data.error : 'An error occurred'}`);
     }
   };
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const { tokenId } = response;
+      const res = await axios.post('http://localhost:3000/users/google-signin', { tokenId });
+      const { token } = res.data;
+
+      // Store token and navigate
+      localStorage.setItem('token', token);
+      navigate('/map');
+    } catch (error) {
+      setMessage('Google Sign-In failed!');
+    }
+  };
+
+  const handleGoogleFailure = () => {
+    setMessage('Google Sign-In failed!');
+  };
+
 
   return (
     <div className={`app app--is-${mode}`}>
@@ -97,12 +126,37 @@ const AuthPage = () => {
                 <Input type="email" id="email" label="Email" value={formData.email} onChange={handleChange} />
                 <Input type="password" id="createpassword" label="Password" value={formData.createpassword} onChange={handleChange} />
                 <Input type="password" id="repeatpassword" label="Repeat Password" value={formData.repeatpassword} onChange={handleChange} />
+                <div className="form-group">
+  <label>Role</label>
+  <div>
+    <label>
+      <input 
+        type="radio" 
+        name="role" // Group by name "role"
+        value="Reservee" 
+        checked={formData.role === 'Reservee'} 
+        onChange={handleChange} 
+      />
+      Reservee
+    </label>
+    <label>
+      <input 
+        type="radio" 
+        name="role" 
+        value="Facility Owner" 
+        checked={formData.role === 'Facility Owner'} 
+        onChange={handleChange} 
+      />
+      Facility Owner
+    </label>
+  </div>
+</div>
+
               </>
             )}
           </div>
           <button className="button button--primary full-width" type="submit">{mode === 'login' ? 'Log In' : 'Sign Up'}</button>
-          <div className="or">OR</div>
-          <button className="button button--google full-width">Sign In with Google</button>
+          
           <div className="message">{message}</div>
         </form>
       </section>

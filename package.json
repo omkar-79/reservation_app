@@ -2,5 +2,12 @@
   "devDependencies": {
     "react-hot-loader": "^4.13.1",
     "webpack-dev-server": "^5.1.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "react-google-login": "^5.2.2",
+    "uuid": "^11.0.2"
   }
 }
