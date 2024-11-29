@@ -11,56 +11,61 @@ const LandingPage = () => {
     navigate('/map');
   };
 
-  const handleRegisterGroundClick = () => {
-    navigate('/register-ground'); // Navigate to the RegisterGround page
-  };
-
   return (
     <div>
       {/* Navigation Bar */}
       <Header />
 
       {/* Hero Section */}
-      <div className="hero-section" id="home">
+{/* Hero Section */}
+<div className="hero-section" id="home">
+  <Container>
+    <Row className="justify-content-center">
+      <Col md={8} className="text-center">
+        <h1>Welcome to myKerchief</h1>
+        <p>Book sports grounds effortlessly.</p>
+        <Button variant="primary" size="lg" onClick={handleGetStartedClick}>
+          Get Started
+        </Button>
+      </Col>
+    </Row>
+  </Container>
+</div>
+
+
+
+{/* Tagline Section */}
+<div className="tagline-section">
         <Container>
           <Row className="justify-content-center">
-            <Col md={8}>
-              <h1>Welcome to myKerchief</h1>
-              <p>Book sports grounds effortlessly and manage your reservations in one place.</p>
-              <Button variant="primary" size="lg" onClick={handleGetStartedClick}>Get Started</Button>
+            <Col md={10} className="text-center">
+              <h2>Your all-in-one solution to book and manage your favorite sports facilities effortlessly.</h2>
             </Col>
           </Row>
         </Container>
       </div>
 
-      {/* Features Section */}
-      <Container className="features-section" id="features">
-        <Row>
-          <Col md={4}>
-            <Image src="https://via.placeholder.com/150" roundedCircle />
-            <h3>Easy Booking</h3>
-            <p>Reserve sports grounds with just a few clicks.</p>
-          </Col>
-          <Col md={4}>
-            <Image src="https://via.placeholder.com/150" roundedCircle />
-            <h3>Manage Reservations</h3>
-            <p>View and manage your reservations from your dashboard.</p>
-          </Col>
-          <Col md={4}>
-            <Image src="https://via.placeholder.com/150" roundedCircle />
-            <h3>Real-Time Availability</h3>
-            <p>Check the availability of sports grounds in real-time.</p>
-          </Col>
-        </Row>
-      </Container>
-
-      {/* About Section */}
-      <div className="about-section" id="about">
+       {/* Conversation Section */}
+       <div className="conversation-section">
         <Container>
           <Row className="justify-content-center">
-            <Col md={8}>
-              <h2>About ReserveIt</h2>
-              <p>ReserveIt is designed to simplify the process of booking sports grounds. Whether you're planning a casual game or a serious training session, our platform ensures you have the best spots reserved.</p>
+            <Col md={8} className="text-center">
+              <h3 className="conversation-title">Where did the idea come from?</h3>
+              <div className="conversation">
+                <div className="bubble first">Let's go play tennis!</div>
+                <div className="bubble second">
+                  Ugh! There's always a long waiting line, and we need to stand in a queue.
+                </div>
+                <div className="bubble third">
+                  That's true. I wish there was a platform where we could reserve tennis courts.
+                </div>
+                <div className="bubble second">
+                  Wait! Why not develop a web platform to reserve sports facilities?
+                </div>
+              </div>
+              <h3 className="conversation-end">
+                Tadaa! That’s how myKerchief was born 🎉
+              </h3>
             </Col>
           </Row>
         </Container>
@@ -71,7 +76,7 @@ const LandingPage = () => {
         <Container>
           <Row className="justify-content-center">
             <Col>
-              <p>&copy; 2024 ReserveIt. All rights reserved.</p>
+              <p>&copy; 2024 myKerchief. All rights reserved.</p>
             </Col>
           </Row>
         </Container>
@@ -79,5 +84,7 @@ const LandingPage = () => {
     </div>
   );
 };
+
+
 
 export default LandingPage;
