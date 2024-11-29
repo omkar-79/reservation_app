@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import '../css/RegisterGround.css';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 
 // Import the icons object
@@ -108,12 +109,31 @@ const RegisterGround = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('token');
+            console.log('Token:', token); 
+    
+            if (!token) {
+                alert('You must be logged in to make a reservation');
+                navigate('/auth');
+                return;
+            }
+            const decodedToken = jwtDecode(token);
+            console.log('Token:', decodedToken); 
+            const userId = decodedToken.userId;
+            const userRole = decodedToken.role;
+            console.log('Role:', userRole); // Log to debug
+            
+            if (userRole !== 'Facility Owner') {
+                alert('Only users with the Reservee role can make a reservation.');
+                return;
+            }
     const { name, description, address, latitude, longitude, totalCourts, timings, icon, timeSlotDuration, images } = formData;
 
     try {
       // Register the ground
       const groundResponse = await axios.post('http://localhost:3000/api/grounds/create', {
         name,
+        userId,
         description,
         address,
         latitude,
@@ -135,8 +155,11 @@ const RegisterGround = () => {
   };
 
   return (
-    <div className="register-ground">
+    <div className="register-ground-container">
       <Header />
+    
+    <div className="register-ground">
+      
       <h1>Register New Ground</h1>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
@@ -220,6 +243,7 @@ const RegisterGround = () => {
 
         <button type="submit">Register Ground</button>
       </form>
+    </div>
     </div>
   );
 };

@@ -1,0 +1,138 @@
+/* General body styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Profile page container */
+.facility-owner-profile {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile heading */
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Email section styling */
+p strong {
+  font-weight: bold;
+  text-align: center;
+}
+
+p {
+  font-size: 1rem;
+  margin: 10px 0;
+  color: #34495e;
+  text-align: center;
+}
+
+/* Your Grounds section heading */
+h2 {
+  font-size: 2rem;
+  color: #34495e;
+  margin-top: 30px;
+  text-align: center;
+}
+
+h3 {
+  color: #16a085;
+}
+
+/* List of grounds */
+.grounds-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Individual ground card */
+.ground-card {
+  background-color: #ecf0f1;
+  padding: 20px;
+  flex: 1 1 calc(45% - 40px); /* Two columns on large screens */
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Ground details */
+.ground-card p {
+  font-size: 1rem;
+  margin: 8px 0;
+  color: #2c3e50;
+}
+
+/* Ground images */
+.ground-images img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* No grounds message */
+.no-grounds {
+  font-size: 1.2rem;
+  color: #95a5a6;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Loading or error messages */
+.loading,
+.error {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #e74c3c;
+  margin-top: 30px;
+}
+
+/* Responsive design */
+@media (max-width: 800px) {
+  .grounds-list {
+      flex-direction: column;  /* Stack ground cards vertically on smaller screens */
+  }
+
+  .ground-card {
+      flex: 1 1 100%;  /* Take up full width on smaller screens */
+      max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  h1 {
+      font-size: 2rem;
+  }
+
+  h2 {
+      font-size: 1.8rem;
+  }
+
+  .ground-card p {
+      font-size: 0.9rem;
+  }
+
+  .ground-images img {
+      max-height: 150px;
+  }
+}

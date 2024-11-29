@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import RegisterGround from './pages/RegisterGround';
 import ReservationPage from './pages/ReservationPage';  // Import the signup/login page
 import ProfilePage from './pages/ReserveeProfile';
+import FacilityOwnerProfile from './pages/FacilityOwnerProfile';  // Import the signup/login page
 import { GoogleOAuthProvider } from '@react-oauth/google'; 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/map" element={<HomePage />} />
         <Route path="/reservee" element={<ProfilePage />} />
+        <Route path="/facility-owner" element={<FacilityOwnerProfile />} />
         <Route path="/reservation/:id" element={<ReservationPage />} />
         <Route path="/register-ground" element={<RegisterGround />} /> 
       </Routes>

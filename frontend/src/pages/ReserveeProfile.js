@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/ReserveeProfile.css';
+import Header from '../components/Header';
 const ProfilePage = () => {
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
@@ -49,7 +50,11 @@ const ProfilePage = () => {
     console.log('Rendering profile page with user data:', userData); // Debug log to check final data before rendering
 
     return (
+        <div className="reservee-profile">
+             <Header />
+        
         <div className="profile-page">
+           
             <h1>{userData.username}'s Profile</h1>
             <p><strong>Email:</strong> {userData.email}</p>
 
@@ -87,6 +92,7 @@ const ProfilePage = () => {
                     ))}
                 </ul>
             )}
+        </div>
         </div>
     );
 };

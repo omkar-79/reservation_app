@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import '../css/AuthPage.css';
+import Header from '../components/Header';
 
 const AuthPage = () => {
   const [mode, setMode] = useState('login');
@@ -91,7 +92,9 @@ const AuthPage = () => {
 
 
   return (
+    
     <div className={`app app--is-${mode}`}>
+      <Header />
       <div className={`form-block-wrapper form-block-wrapper--is-${mode}`}></div>
       <section className={`form-block form-block--is-${mode}`}>
         <header className="form-block__header">

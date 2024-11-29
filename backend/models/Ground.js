@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const groundSchema = new mongoose.Schema({
   name: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+},
   description: String,
   address: String,
   latitude: Number,

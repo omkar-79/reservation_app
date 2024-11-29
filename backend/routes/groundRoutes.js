@@ -5,6 +5,9 @@ const groundController = require('../controllers/groundController');
 // Route to create a new ground
 router.post('/grounds/create', groundController.createGround);
 
+// Facility Owner profile
+router.get('/grounds/facilityprofile', groundController.facilityOwnerProfile);
+
 // Route to get all grounds
 router.get('/grounds', groundController.getAllGrounds);
 
@@ -12,3 +15,4 @@ router.get('/grounds', groundController.getAllGrounds);
 router.get('/grounds/:id', groundController.getGroundById);
 
 module.exports = router;
+

@@ -1,0 +1,86 @@
+/* Header styling */
+.brand-name {
+    font-family: 'Bradley Hand', cursive, sans-serif; 
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .brand-name:hover {
+    color: #ecf0f1;
+  }
+  
+  /* Navigation Items */
+  .nav-item {
+    color: #ecf0f1 !important;
+    font-size: 1rem;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-item:hover {
+    color: #16a085!important;
+  }
+  
+  
+  /* Navbar customization */
+  .navbar-dark .navbar-nav .nav-link {
+    color: #ecf0f1;
+    font-size: 1.1rem;
+  }
+  
+  .navbar-dark .navbar-nav .nav-link:hover {
+    color: #16a085;
+  }
+  
+  /* Flex layout for buttons */
+  .ms-auto.d-flex {
+    display: flex;
+    gap: 15px; /* Space between buttons */
+    align-items: center;
+  }
+  
+  .ms-auto.d-flex .auth-button {
+    padding: 8px 20px; /* Adjust padding for buttons */
+    font-size: 1rem;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 991px) {
+    .brand-name {
+      font-size: 1.5rem;
+    }
+  
+    .nav-item {
+      font-size: 0.9rem;
+      margin-right: 15px;
+    }
+  
+    .auth-button {
+      font-size: 0.9rem;
+      padding: 6px 14px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .navbar-brand {
+      font-size: 1.2rem;
+    }
+  
+    .nav-item {
+      font-size: 0.8rem;
+      margin-right: 10px;
+    }
+  
+    .auth-button {
+      font-size: 0.8rem;
+      padding: 5px 12px;
+    }
+  }
+  
+  /* Navbar Customization for larger screens */
+  .navbar {
+    padding: 1rem 0;
+  }
+  
