@@ -49,7 +49,7 @@ body {
   z-index: 2;
   font-size: 1.2rem; /* Adjust size for readability */
   margin-bottom: 20px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add shadow for contrast */
+ /* Add shadow for contrast */
   transition: color 0.3s ease; /* Smooth color change */
 }
 

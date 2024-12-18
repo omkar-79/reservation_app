@@ -18,52 +18,85 @@ exports.getAllCourts = async (req, res) => {
     }
 };
 
-// Function to generate time slots for a given date
-function generateTimeSlots(startTime, endTime, timeSlotDuration) {
+// Function to generate time slots for a given date range
+function generateTimeSlots(startTime, endTime, timeSlotDuration, startDate, endDate) {
     const slots = [];
-    const start = new Date(`1970-01-01T${startTime}:00`);
-    const end = new Date(`1970-01-01T${endTime}:00`);
+    const currentDate = new Date(startDate);
+    const lastDate = new Date(endDate);
 
-    while (start < end) {
-        const nextStart = new Date(start);
-        const nextEnd = new Date(start.setMinutes(start.getMinutes() + timeSlotDuration));
-        
+    while (currentDate <= lastDate) {
+        const daySlots = [];
+        const start = new Date(currentDate);
+        start.setHours(startTime.split(':')[0], startTime.split(':')[1], 0);
+        const end = new Date(currentDate);
+        end.setHours(endTime.split(':')[0], endTime.split(':')[1], 0);
+
+        while (start < end) {
+            const nextStart = new Date(start);
+            const nextEnd = new Date(start.setMinutes(start.getMinutes() + timeSlotDuration));
+            
+            daySlots.push({
+                start: nextStart.toTimeString().split(' ')[0], // Format as HH:MM:SS
+                end: nextEnd.toTimeString().split(' ')[0],
+                available: true // Initially available
+            });
+        }
+
         slots.push({
-            start: nextStart.toTimeString().split(' ')[0], // Format as HH:MM:SS
-            end: nextEnd.toTimeString().split(' ')[0],
-            available: true // Initially available
+            date: currentDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+            slots: daySlots
         });
+
+        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
     }
     return slots;
 }
 
 // Function to create courts for a ground
-exports.createCourtsForGround = async (req, res) => {
-    const { totalCourts, timings, timeSlotDuration } = req.body;
+exports.createCourtsForGround = async (req) => {
+    const { totalCourts, timings, timeSlotDuration, dateRange, groundId } = req.body;
 
-    const createdCourts = [];
-    const { from, to } = timings;
-
-    for (let i = 0; i < totalCourts; i++) {
-        const courtId = `Court-${uuidv4()}`;// Unique identifier for each court
-        const courtName = `Court-${i + 1}`;
-        const timeSlots = generateTimeSlots(from, to, timeSlotDuration);
-        
-        const newCourt = new Court({
-            groundId: req.body.groundId, // Assumes groundId is in the request body
-            courtId,
-            courtName,
-            timeSlots: [{ date: new Date(), slots: timeSlots }], // Store slots for today
-            reservedSlots: [] // Initially empty
-        });
-
-        await newCourt.save();
-        createdCourts.push(newCourt);
+    if (!groundId) {
+        throw new Error('Ground ID is required');
     }
 
-    return { courts: createdCourts }; // Return created courts for further processing
-};
+    const createdCourts = [];
+    const { from: startTime, to: endTime } = timings;
+    
+    let startDate, endDate;
+    if (dateRange && dateRange.from && dateRange.to) {
+        startDate = new Date(dateRange.from);
+        endDate = new Date(dateRange.to);
+    } else {
+        // If dateRange is not provided, use today's date for both start and end
+        startDate = new Date();
+        endDate = new Date();
+    }
 
+    try {
+        for (let i = 0; i < totalCourts; i++) {
+            const courtId = `Court-${uuidv4()}`; // Unique identifier for each court
+            const courtName = `Court-${i + 1}`;
+            const timeSlots = generateTimeSlots(startTime, endTime, timeSlotDuration, startDate, endDate);
+            
+            const newCourt = new Court({
+                groundId,
+                courtId,
+                courtName,
+                timeSlots,
+                reservedSlots: [] // Initially empty
+            });
+
+            await newCourt.save();
+            createdCourts.push(newCourt);
+        }
+
+        return { courts: createdCourts };
+    } catch (error) {
+        console.error('Error creating courts:', error);
+        throw error;
+    }
+};
 
 
 // Controller to get courts by ground ID
@@ -110,7 +143,7 @@ exports.getCourtsByGroundId = async (req, res) => {
 exports.getTimeSlotsByCourtAndDate = async (req, res) => {
     try {
         const { courtId, date } = req.params;
-
+        console.log('Received courtId and date:', courtId, date); // Debugging line
         if (!courtId || !date) {
             return res.status(400).json({ error: 'Missing required parameters' });
         }

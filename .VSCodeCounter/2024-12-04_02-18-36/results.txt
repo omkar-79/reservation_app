@@ -1,0 +1,106 @@
+Date : 2024-12-04 02:18:36
+Directory : /Users/omkar/Documents/Project/reservation_app
+Total : 57 files,  26979 codes, 207 comments, 664 blanks, all 27850 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          7 |     23,680 |          0 |          7 |     23,687 |
+| JavaScript |         32 |      1,975 |        122 |        399 |      2,496 |
+| CSS        |         11 |      1,248 |         58 |        234 |      1,540 |
+| YAML       |          1 |         32 |          0 |          6 |         38 |
+| HTML       |          1 |         20 |         23 |          1 |         44 |
+| Docker     |          2 |         14 |          4 |         14 |         32 |
+| Markdown   |          2 |          9 |          0 |          3 |         12 |
+| XML        |          1 |          1 |          0 |          0 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                        | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                           |         57 |     26,979 |        207 |        664 |     27,850 |
+| . (Files)                                                                                   |          5 |      2,748 |          0 |         12 |      2,760 |
+| backend                                                                                     |         18 |      2,006 |         85 |        205 |      2,296 |
+| backend (Files)                                                                             |          4 |      1,286 |          6 |         18 |      1,310 |
+| backend/controllers                                                                         |          5 |        548 |         63 |        146 |        757 |
+| backend/middlewares                                                                         |          1 |         13 |          1 |          6 |         20 |
+| backend/models                                                                              |          4 |        123 |          2 |         12 |        137 |
+| backend/routes                                                                              |          4 |         36 |         13 |         23 |         72 |
+| frontend                                                                                    |         34 |     22,225 |        122 |        447 |     22,794 |
+| frontend (Files)                                                                            |          4 |     19,709 |          2 |         11 |     19,722 |
+| frontend/public                                                                             |          2 |         45 |         23 |          2 |         70 |
+| frontend/src                                                                                |         28 |      2,471 |         97 |        434 |      3,002 |
+| frontend/src (Files)                                                                        |          8 |        104 |          4 |         21 |        129 |
+| frontend/src/assets                                                                         |          2 |         18 |          4 |          6 |         28 |
+| frontend/src/assets/facility                                                                |          1 |          3 |          1 |          1 |          5 |
+| frontend/src/assets/icons                                                                   |          1 |         15 |          3 |          5 |         23 |
+| frontend/src/components                                                                     |          2 |        129 |          1 |         19 |        149 |
+| frontend/src/css                                                                            |          9 |      1,203 |         58 |        226 |      1,487 |
+| frontend/src/pages                                                                          |          7 |      1,017 |         30 |        162 |      1,209 |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                    | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /Users/omkar/Documents/Project/reservation_app/README.md                                    | Markdown   |          7 |          0 |          2 |          9 |
+| /Users/omkar/Documents/Project/reservation_app/backend/Dockerfile                           | Docker     |          7 |          2 |          6 |         15 |
+| /Users/omkar/Documents/Project/reservation_app/backend/controllers/courtController.js       | JavaScript |        167 |         16 |         50 |        233 |
+| /Users/omkar/Documents/Project/reservation_app/backend/controllers/google_passport.js       | JavaScript |         39 |          2 |          6 |         47 |
+| /Users/omkar/Documents/Project/reservation_app/backend/controllers/groundController.js      | JavaScript |        120 |         15 |         23 |        158 |
+| /Users/omkar/Documents/Project/reservation_app/backend/controllers/reservationController.js | JavaScript |         94 |         11 |         31 |        136 |
+| /Users/omkar/Documents/Project/reservation_app/backend/controllers/userController.js        | JavaScript |        128 |         19 |         36 |        183 |
+| /Users/omkar/Documents/Project/reservation_app/backend/middlewares/authMiddleware.js        | JavaScript |         13 |          1 |          6 |         20 |
+| /Users/omkar/Documents/Project/reservation_app/backend/models/Court.js                      | JavaScript |         42 |          1 |          3 |         46 |
+| /Users/omkar/Documents/Project/reservation_app/backend/models/Ground.js                     | JavaScript |         24 |          0 |          3 |         27 |
+| /Users/omkar/Documents/Project/reservation_app/backend/models/Reservation.js                | JavaScript |         41 |          1 |          3 |         45 |
+| /Users/omkar/Documents/Project/reservation_app/backend/models/User.js                       | JavaScript |         16 |          0 |          3 |         19 |
+| /Users/omkar/Documents/Project/reservation_app/backend/package-lock.json                    | JSON       |      1,229 |          0 |          1 |      1,230 |
+| /Users/omkar/Documents/Project/reservation_app/backend/package.json                         | JSON       |         23 |          0 |          1 |         24 |
+| /Users/omkar/Documents/Project/reservation_app/backend/routes/courtRoutes.js                | JavaScript |         10 |          1 |          3 |         14 |
+| /Users/omkar/Documents/Project/reservation_app/backend/routes/groundRoutes.js               | JavaScript |          8 |          4 |          7 |         19 |
+| /Users/omkar/Documents/Project/reservation_app/backend/routes/reservationRoutes.js          | JavaScript |          8 |          4 |          5 |         17 |
+| /Users/omkar/Documents/Project/reservation_app/backend/routes/userRoutes.js                 | JavaScript |         10 |          4 |          8 |         22 |
+| /Users/omkar/Documents/Project/reservation_app/backend/server.js                            | JavaScript |         27 |          4 |         10 |         41 |
+| /Users/omkar/Documents/Project/reservation_app/docker-compose.yml                           | YAML       |         32 |          0 |          6 |         38 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/Dockerfile                          | Docker     |          7 |          2 |          8 |         17 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/README.md                           | Markdown   |          2 |          0 |          1 |          3 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/package-lock.json                   | JSON       |     19,642 |          0 |          1 |     19,643 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/package.json                        | JSON       |         58 |          0 |          1 |         59 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/public/index.html                   | HTML       |         20 |         23 |          1 |         44 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/public/manifest.json                | JSON       |         25 |          0 |          1 |         26 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/App.css                         | CSS        |         33 |          0 |          6 |         39 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/App.js                          | JavaScript |         27 |          0 |          6 |         33 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/App.test.js                     | JavaScript |          7 |          0 |          2 |          9 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/assets/facility/index.js        | JavaScript |          3 |          1 |          1 |          5 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/assets/icons/index.js           | JavaScript |         15 |          3 |          5 |         23 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/components/Header.js            | JavaScript |         78 |          1 |         12 |         91 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/components/Search.js            | JavaScript |         51 |          0 |          7 |         58 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/AuthPage.css                | CSS        |        292 |          2 |         51 |        345 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/FacilityOwnerProfile.css    | CSS        |        108 |         12 |         19 |        139 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/Header.css                  | CSS        |         65 |          6 |         16 |         87 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/HomePage.css                | CSS        |         98 |          1 |         15 |        114 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/LandingPage.css             | CSS        |        144 |         10 |         32 |        186 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/RegisterGround.css          | CSS        |        169 |          2 |         30 |        201 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/ReservationPage.css         | CSS        |        188 |         12 |         38 |        238 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/ReserveeProfile.css         | CSS        |        108 |         13 |         21 |        142 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/css/Search.css                  | CSS        |         31 |          0 |          4 |         35 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/index.css                       | CSS        |         12 |          0 |          2 |         14 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/index.js                        | JavaScript |         11 |          0 |          2 |         13 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/logo.svg                        | XML        |          1 |          0 |          0 |          1 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/AuthPage.js               | JavaScript |        150 |          8 |         20 |        178 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/FacilityOwnerProfile.js   | JavaScript |         89 |          2 |         17 |        108 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/HomePage.js               | JavaScript |        173 |          6 |         30 |        209 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/LandingPage.js            | JavaScript |         78 |          0 |         13 |         91 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/RegisterGround.js         | JavaScript |        214 |          2 |         36 |        252 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/ReservationPage.js        | JavaScript |        226 |         11 |         33 |        270 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/pages/ReserveeProfile.js        | JavaScript |         87 |          1 |         13 |        101 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/reportWebVitals.js              | JavaScript |         12 |          0 |          2 |         14 |
+| /Users/omkar/Documents/Project/reservation_app/frontend/src/setupTests.js                   | JavaScript |          1 |          4 |          1 |          6 |
+| /Users/omkar/Documents/Project/reservation_app/generate.js                                  | JavaScript |          6 |          0 |          2 |          8 |
+| /Users/omkar/Documents/Project/reservation_app/package-lock.json                            | JSON       |      2,690 |          0 |          1 |      2,691 |
+| /Users/omkar/Documents/Project/reservation_app/package.json                                 | JSON       |         13 |          0 |          1 |         14 |
+| Total                                                                                       |            |     26,979 |        207 |        664 |     27,850 |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

@@ -23,7 +23,7 @@ const LandingPage = () => {
     <Row className="justify-content-center">
       <Col md={8} className="text-center">
         <h1>Welcome to myKerchief</h1>
-        <p>Book sports grounds effortlessly.</p>
+        <p>Book sports facilities effortlessly.</p>
         <Button variant="primary" size="lg" onClick={handleGetStartedClick}>
           Get Started
         </Button>
@@ -39,7 +39,7 @@ const LandingPage = () => {
         <Container>
           <Row className="justify-content-center">
             <Col md={10} className="text-center">
-              <h2>Your all-in-one solution to book and manage your favorite sports facilities effortlessly.</h2>
+              <h2>No more waiting, just playing — your go-to for sports reservations!</h2>
             </Col>
           </Row>
         </Container>

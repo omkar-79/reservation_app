@@ -55,6 +55,7 @@ const ReservationPage = () => {
 
         try {
             const response = await axios.get(`http://localhost:3000/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
+            
             console.log("Fetched time slots:", response.data); // Log API response
 
             // Ensure the correct data is being set

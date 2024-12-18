@@ -6,7 +6,7 @@ const courtController = require('../controllers/courtController');
 // Create a ground and associated courts
 exports.createGround = async (req, res) => {
   try {
-      const { name, userId, description, address, latitude, longitude, totalCourts, images, timings, icon, timeSlotDuration } = req.body;
+      const { name, userId, description, address, latitude, longitude, totalCourts, images, timings, icon, timeSlotDuration, dateRange } = req.body;
 
       // Check for required fields
       if (!name || !address || !totalCourts || !timings || !icon || !timeSlotDuration) {
@@ -26,7 +26,8 @@ exports.createGround = async (req, res) => {
           timings,
           icon,
           timeSlotDuration,
-          courtIds: []
+          courtIds: [],
+          dateRange
       });
 
       await newGround.save();
@@ -37,9 +38,10 @@ exports.createGround = async (req, res) => {
               totalCourts,
               timings,
               timeSlotDuration,
-              groundId: newGround._id // Pass the ground ID
+              groundId: newGround._id, // Pass the ground ID
+              dateRange
           }
-      }, res);
+      });
       
       // Ensure courts are created
       if (!createdCourtsResponse) {

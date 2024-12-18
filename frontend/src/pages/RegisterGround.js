@@ -31,7 +31,11 @@ const RegisterGround = () => {
       to: '18:00',
     },
     icon: sportsIcons[0], // Default icon
-    timeSlotDuration: 30
+    timeSlotDuration: 30,
+    dateRange: {
+      from: '',
+      to: ''
+    }
   });
 
   const handleChange = (e) => {
@@ -51,6 +55,17 @@ const RegisterGround = () => {
       }
     });
   };
+
+  const handleDateChange = (name, value) => {
+    setFormData({
+      ...formData,
+      dateRange: {
+        ...formData.dateRange,
+        [name]: value
+      }
+    });
+  };
+
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -127,7 +142,7 @@ const RegisterGround = () => {
                 alert('Only users with the Reservee role can make a reservation.');
                 return;
             }
-    const { name, description, address, latitude, longitude, totalCourts, timings, icon, timeSlotDuration, images } = formData;
+    const { name, description, address, latitude, longitude, totalCourts, timings, icon, timeSlotDuration, images, dateRange } = formData;
 
     try {
       // Register the ground
@@ -142,10 +157,11 @@ const RegisterGround = () => {
         timings,
         icon,
         timeSlotDuration,
-        images
+        images,
+        dateRange
       });
 
-      console.log('Ground registered:', groundResponse.data);
+      console.log('Ground registered:', groundResponse);
       alert('Ground registered successfully!');
       navigate('/map'); // Redirect to /map after successful registration
     } catch (error) {
@@ -226,6 +242,27 @@ const RegisterGround = () => {
           value={formData.timeSlotDuration}
           onChange={handleChange}
         />
+        <label>Date Range for Time Slots:</label>
+          <div className="date-range">
+            <div>
+              <label>From:</label>
+              <input
+                type="date"
+                name="from"
+                value={formData.dateRange.from}
+                onChange={(e) => handleDateChange('from', e.target.value)}
+              />
+            </div>
+            <div>
+              <label>To:</label>
+              <input
+                type="date"
+                name="to"
+                value={formData.dateRange.to}
+                onChange={(e) => handleDateChange('to', e.target.value)}
+              />
+            </div>
+          </div>
 
         <div className="map-container">
           <MapContainer
