@@ -1,11 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { tennisCourtIcon } from '../assets/facility';
 import '../css/ReservationPage.css';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+
+// Import all sport icons
+import footballIcon from '../assets/icons/football.png';
+import basketballIcon from '../assets/icons/basketball.png';
+import tennisIcon from '../assets/icons/tennis.png';
+import baseballIcon from '../assets/icons/baseball.png';
+import badmintonIcon from '../assets/icons/badminton.png';
+import soccerIcon from '../assets/icons/soccer.png';
+
+// Create an object to map sport names to their respective icons
+const sportIcons = {
+    football: footballIcon,
+    basketball: basketballIcon,
+    tennis: tennisIcon,
+    baseball: baseballIcon,
+    badminton: badmintonIcon,
+    soccer: soccerIcon
+  };
 
 const ReservationPage = () => {
     const { id } = useParams(); // Get the ground ID from the URL
@@ -217,22 +234,23 @@ const ReservationPage = () => {
                 </div>
 
                 {/* Court Selection Section */}
-                <div className="court-list"> 
-                    {courts.map((court, index) => {
-                        const courtName = courtNames[court];
-                        console.log('Court object:', court); // Log court object
-                        return (
-                            <div
-                                key={court} 
-                                className={`court ${selectedCourt === court ? 'selected' : ''}`} 
-                                onClick={() => handleCourtClick(court)} 
-                            >
-                                <img src={tennisCourtIcon} alt="Court Icon" className="court-icon" />
-                                <div className="court-number">{courtName}</div> 
-                            </div>
-                        );
-                    })}
-                </div>
+<div className="court-list"> 
+    {courts.map((court, index) => {
+        const courtName = courtNames[court];
+        // Use ground.icon to get the correct sport icon, fallback to tennis if not found
+        const sportIcon = sportIcons[ground.icon] || sportIcons.tennis;
+        return (
+            <div
+                key={court} 
+                className={`court ${selectedCourt === court ? 'selected' : ''}`} 
+                onClick={() => handleCourtClick(court)} 
+            >
+                <img src={sportIcon} alt={`${ground.icon || 'Tennis'} Court Icon`} className="court-icon" />
+                <div className="court-number">{courtName}</div> 
+            </div>
+        );
+    })}
+</div>
 
                 <div className="time-slot-selection">
                     <h3>Select Time Slots</h3>
