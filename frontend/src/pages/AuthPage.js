@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '../css/AuthPage.css';
 import Header from '../components/Header';
+import api from '../services/api';
 
 const AuthPage = () => {
   const [mode, setMode] = useState('login');
@@ -35,7 +36,7 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         // Login request
-        const response = await axios.post('http://192.241.140.48:3000/users/login', {
+        const response = await api.post('/users/login', {
           username: formData.username,
           password: formData.password,
         });

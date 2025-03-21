@@ -7,7 +7,8 @@ import '../css/HomePage.css';
 import icons from '../assets/icons'; // Import the icons
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios for API calls
-import Header from '../components/Header'
+import Header from '../components/Header';
+import api from '../services/api';
 
 
 // Fix for default marker icon not showing in Leaflet
@@ -39,7 +40,7 @@ const HomePage = () => {
     // Fetch grounds data from API
     const fetchGrounds = async () => {
       try {
-        const response = await axios.get('http://192.241.140.48:3000/api/grounds');
+        const response = await api.get('/api/grounds');
         setGrounds(response.data);
       } catch (error) {
         console.error('Error fetching grounds data:', error);

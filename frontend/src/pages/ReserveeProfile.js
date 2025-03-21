@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/ReserveeProfile.css';
 import Header from '../components/Header';
+import api from '../services/api';
 
 
 const ProfilePage = () => {
@@ -23,7 +23,7 @@ const ProfilePage = () => {
 
             try {
                 console.log('Fetching user profile data...');
-                const response = await axios.get('http://192.241.140.48:3000/users/reservee', {
+                const response = await api.get('/users/reservee', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -53,7 +53,7 @@ const ProfilePage = () => {
         }
 
         try {
-            await axios.post(`http://192.241.140.48:3000/api/reservations/cancel/${reservationId}`, {}, {
+            await api.post(`/api/reservations/cancel/${reservationId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

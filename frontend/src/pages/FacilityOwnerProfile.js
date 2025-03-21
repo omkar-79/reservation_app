@@ -3,6 +3,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import '../css/FacilityOwnerProfile.css';
 import Header from '../components/Header';
+import api from '../services/api';
 
 
 const FacilityOwnerProfile = () => {
@@ -34,8 +35,8 @@ const FacilityOwnerProfile = () => {
         console.log('User ID:', userId);
 
         // Pass the userId to the backend as a query parameter
-        const response = await axios.get(
-          `http://192.241.140.48:3000/api/grounds/facilityprofile?userId=${userId}`,
+        const response = await api.get(
+          `/api/grounds/facilityprofile?userId=${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

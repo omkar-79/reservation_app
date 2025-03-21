@@ -13,6 +13,7 @@ import tennisIcon from '../assets/icons/tennis.png';
 import baseballIcon from '../assets/icons/baseball.png';
 import badmintonIcon from '../assets/icons/badminton.png';
 import soccerIcon from '../assets/icons/soccer.png';
+import api from '../services/api';
 
 // Create an object to map sport names to their respective icons
 const sportIcons = {
@@ -40,8 +41,8 @@ const ReservationPage = () => {
     const fetchGroundAndCourts = useCallback(async () => {
         try {
             const [groundResponse, courtsResponse] = await Promise.all([
-                axios.get(`http://192.241.140.48:3000/api/grounds/${id}`),
-                axios.get(`http://192.241.140.48:3000/api/courts/by-ground/${id}`)
+                api.get(`/api/grounds/${id}`),
+                api.get(`/api/courts/by-ground/${id}`)
             ]);
             console.log('Fetched courts:', courtsResponse.data); 
             setGround(groundResponse.data);
@@ -55,7 +56,7 @@ const ReservationPage = () => {
     const fetchCourtName = async (courtId) => {
         console.log('Fetching court name:', courtId); // Log to debug
         try {
-            const response = await axios.post('http://192.241.140.48:3000/api/courts/name', { courtId });
+            const response = await api.post('/api/courts/name', { courtId });
             return response.data.courtName;
         } catch (error) {
             console.error('Error fetching court name:', error);
@@ -71,7 +72,7 @@ const ReservationPage = () => {
         console.log("Fetching time slots for Court:", selectedCourt, "Date:", selectedDate); // Log to debug
 
         try {
-            const response = await axios.get(`http://192.241.140.48:3000/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
+            const response = await api.get(`/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
             
             console.log("Fetched time slots:", response.data); // Log API response
 
@@ -177,8 +178,8 @@ const ReservationPage = () => {
 
         console.log('Selected Slot Details:', selectedSlotDetails);
     
-            await axios.post(
-                'http://192.241.140.48:3000/api/reservations',
+            await api.post(
+                '/api/reservations',
                 {
                     groundId: id,
                     userId: userId,

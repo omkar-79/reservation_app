@@ -12,7 +12,7 @@ services:
       - mongo
     environment:
       - MONGO_URL=mongodb://mongo:27017/mydatabase
-      - CORS_ORIGIN=http://192.241.140.48
+      - CORS_ORIGIN=https://mykerchief.live
       - NODE_ENV=production
 
   frontend:
@@ -23,7 +23,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - REACT_APP_API_URL=http://192.241.140.48
+      - REACT_APP_API_URL=https://192.241.140.48
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=production
     command: npm start -- --host 0.0.0.0

@@ -9,6 +9,7 @@ import '../css/RegisterGround.css';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import api from '../services/api';
 
 
 // Import the icons object
@@ -146,7 +147,7 @@ const RegisterGround = () => {
 
     try {
       // Register the ground
-      const groundResponse = await axios.post('http://192.241.140.48:3000/api/grounds/create', {
+      const groundResponse = await api.post('/api/grounds/create', {
         name,
         userId,
         description,
