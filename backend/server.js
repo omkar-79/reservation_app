@@ -5,11 +5,22 @@ const userRoutes = require('./routes/userRoutes');
 const groundRoutes = require('./routes/groundRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const courtRoutes = require('./routes/courtRoutes');
-
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// SSL configuration
+const sslOptions = {
+  ca: [
+    fs.readFileSync('/etc/ssl/certs/USERTrustRSAAAACA.crt')
+  ],
+  cert: fs.readFileSync('/etc/ssl/certs/2385291893.crt'),
+  key: fs.readFileSync('/etc/ssl/private/mykerchief_live_no_pass.key')
+};
 
 // Increase the limit to 50mb (or as per your requirement)
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -17,13 +28,12 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Update CORS configuration
 app.use(cors({
-  origin: ['http://192.241.140.48:3001',
-    'http://192.241.140.48',
-    'http://localhost:3001',
+  origin: [
     'https://192.241.140.48:3001',
-    'https://mykerchief.live',
     'https://192.241.140.48',
-    'http://localhost:3001'],
+    'https://mykerchief.live',
+    'http://localhost:3001'  // Keep HTTP for local development
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -44,7 +54,7 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://mongo:27017/mydatabase', {
   .then(() => console.log('Connected to MongoDB'))
   .catch(error => console.error('Error connecting to MongoDB:', error));
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Create HTTPS server instead of HTTP
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
 });
