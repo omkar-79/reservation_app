@@ -57,7 +57,7 @@ const AuthPage = () => {
           setMessage('Passwords do not match!');
           return;
         }
-        await axios.post('http://192.241.140.48:3000/users/signup', {
+        await api.post('/users/signup', {
           username: formData.username,
           password: formData.createpassword,
           email: formData.email,
@@ -73,23 +73,8 @@ const AuthPage = () => {
       setMessage(`Error: ${error.response ? error.response.data.error : 'An error occurred'}`);
     }
   };
-  const handleGoogleSuccess = async (response) => {
-    try {
-      const { tokenId } = response;
-      const res = await axios.post('http://localhost:3000/users/google-signin', { tokenId });
-      const { token } = res.data;
 
-      // Store token and navigate
-      localStorage.setItem('token', token);
-      navigate('/map');
-    } catch (error) {
-      setMessage('Google Sign-In failed!');
-    }
-  };
 
-  const handleGoogleFailure = () => {
-    setMessage('Google Sign-In failed!');
-  };
 
 
   return (
