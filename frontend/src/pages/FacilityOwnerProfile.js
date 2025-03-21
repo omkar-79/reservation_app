@@ -35,7 +35,7 @@ const FacilityOwnerProfile = () => {
 
         // Pass the userId to the backend as a query parameter
         const response = await axios.get(
-          `http://localhost:3000/api/grounds/facilityprofile?userId=${userId}`,
+          `http://192.241.140.48:3000/api/grounds/facilityprofile?userId=${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -39,7 +39,7 @@ const HomePage = () => {
     // Fetch grounds data from API
     const fetchGrounds = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/grounds');
+        const response = await axios.get('http://192.241.140.48:3000/api/grounds');
         setGrounds(response.data);
       } catch (error) {
         console.error('Error fetching grounds data:', error);

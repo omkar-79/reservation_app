@@ -23,7 +23,7 @@ const ProfilePage = () => {
 
             try {
                 console.log('Fetching user profile data...');
-                const response = await axios.get('http://localhost:3000/users/reservee', {
+                const response = await axios.get('http://192.241.140.48:3000/users/reservee', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -53,7 +53,7 @@ const ProfilePage = () => {
         }
 
         try {
-            await axios.post(`http://localhost:3000/api/reservations/cancel/${reservationId}`, {}, {
+            await axios.post(`http://192.241.140.48:3000/api/reservations/cancel/${reservationId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

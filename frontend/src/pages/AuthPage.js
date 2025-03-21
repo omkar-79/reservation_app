@@ -35,7 +35,7 @@ const AuthPage = () => {
     try {
       if (mode === 'login') {
         // Login request
-        const response = await axios.post('http://localhost:3000/users/login', {
+        const response = await axios.post('http://192.241.140.48:3000/users/login', {
           username: formData.username,
           password: formData.password,
         });
@@ -56,7 +56,7 @@ const AuthPage = () => {
           setMessage('Passwords do not match!');
           return;
         }
-        await axios.post('http://localhost:3000/users/signup', {
+        await axios.post('http://192.241.140.48:3000/users/signup', {
           username: formData.username,
           password: formData.createpassword,
           email: formData.email,

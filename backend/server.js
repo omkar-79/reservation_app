@@ -8,8 +8,6 @@ const courtRoutes = require('./routes/courtRoutes');
 
 const cors = require('cors');
 
-
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +15,10 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(cors()); // Enable CORS for all origins
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://192.241.140.48',
+  credentials: true
+})); // Enable CORS for all origins
 app.use(express.json()); // Middleware to parse JSON
 
 // Routes

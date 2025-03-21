@@ -146,7 +146,7 @@ const RegisterGround = () => {
 
     try {
       // Register the ground
-      const groundResponse = await axios.post('http://localhost:3000/api/grounds/create', {
+      const groundResponse = await axios.post('http://192.241.140.48:3000/api/grounds/create', {
         name,
         userId,
         description,
