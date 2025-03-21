@@ -11,14 +11,7 @@ const http = require('http');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// SSL configuration
-const sslOptions = {
-  ca: [
-    fs.readFileSync('/etc/ssl/certs/USERTrustRSAAAACA.crt')
-  ],
-  cert: fs.readFileSync('/etc/ssl/certs/2385291893.crt'),
-  key: fs.readFileSync('/etc/ssl/private/mykerchief_live_no_pass.key')
-};
+
 
 // Increase the limit to 50mb (or as per your requirement)
 app.use(bodyParser.json({ limit: '50mb' }));
