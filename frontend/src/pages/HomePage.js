@@ -65,10 +65,16 @@ const HomePage = () => {
     // Check if the user is authenticated
     const checkAuth = async () => {
       try {
-        const response = await api.get('/check-auth');
+        const token = localStorage.getItem('token');
+        const response = await api.get('/users/check-auth', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         setIsAuthenticated(response.data.isAuthenticated);
       } catch (error) {
         console.error('Error checking authentication:', error);
+        setIsAuthenticated(false);
       }
     };
 

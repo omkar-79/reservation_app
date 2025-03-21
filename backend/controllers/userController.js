@@ -180,3 +180,33 @@ exports.getReserveeProfile = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Add this to your existing exports
+exports.checkAuth = async (req, res) => {
+  try {
+    // Get token from header
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      return res.status(200).json({ isAuthenticated: false });
+    }
+
+    // Verify token
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(200).json({ isAuthenticated: false });
+      }
+      return res.status(200).json({ 
+        isAuthenticated: true,
+        user: {
+          userId: decoded.userId,
+          username: decoded.username,
+          role: decoded.role
+        }
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
