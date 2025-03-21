@@ -41,8 +41,8 @@ const ReservationPage = () => {
     const fetchGroundAndCourts = useCallback(async () => {
         try {
             const [groundResponse, courtsResponse] = await Promise.all([
-                api.get(`/api/grounds/${id}`),
-                api.get(`/api/courts/by-ground/${id}`)
+                api.get(`/grounds/${id}`),
+                api.get(`/courts/by-ground/${id}`)
             ]);
             console.log('Fetched courts:', courtsResponse.data); 
             setGround(groundResponse.data);
@@ -56,7 +56,7 @@ const ReservationPage = () => {
     const fetchCourtName = async (courtId) => {
         console.log('Fetching court name:', courtId); // Log to debug
         try {
-            const response = await api.post('/api/courts/name', { courtId });
+            const response = await api.post('/courts/name', { courtId });
             return response.data.courtName;
         } catch (error) {
             console.error('Error fetching court name:', error);
@@ -72,7 +72,7 @@ const ReservationPage = () => {
         console.log("Fetching time slots for Court:", selectedCourt, "Date:", selectedDate); // Log to debug
 
         try {
-            const response = await api.get(`/api/courts/${selectedCourt}/time-slots/${selectedDate}`);
+            const response = await api.get(`/courts/${selectedCourt}/time-slots/${selectedDate}`);
             
             console.log("Fetched time slots:", response.data); // Log API response
 
@@ -179,7 +179,7 @@ const ReservationPage = () => {
         console.log('Selected Slot Details:', selectedSlotDetails);
     
             await api.post(
-                '/api/reservations',
+                '/reservations',
                 {
                     groundId: id,
                     userId: userId,

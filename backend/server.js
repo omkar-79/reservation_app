@@ -29,10 +29,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Update CORS configuration
 app.use(cors({
   origin: [
-    'https://192.241.140.48:3001',
-    'https://192.241.140.48',
     'https://mykerchief.live',
-    'http://localhost:3001'  // Keep HTTP for local development
+    'https://www.mykerchief.live',
+    'http://localhost:3001'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -41,10 +40,10 @@ app.use(cors({
 app.use(express.json()); // Middleware to parse JSON
 
 // Routes
-app.use('/api/', userRoutes);
-app.use('/api/', groundRoutes);
-app.use('/api/', reservationRoutes);
-app.use('/api/', courtRoutes);
+app.use('/', userRoutes);
+app.use('/', groundRoutes);
+app.use('/', reservationRoutes);
+app.use('/', courtRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL || 'mongodb://mongo:27017/mydatabase', {

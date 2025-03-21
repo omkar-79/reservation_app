@@ -53,7 +53,7 @@ const ProfilePage = () => {
         }
 
         try {
-            await api.post(`/api/reservations/cancel/${reservationId}`, {}, {
+            await api.post(`/reservations/cancel/${reservationId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

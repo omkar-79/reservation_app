@@ -147,7 +147,7 @@ const RegisterGround = () => {
 
     try {
       // Register the ground
-      const groundResponse = await api.post('/api/grounds/create', {
+      const groundResponse = await api.post('/grounds/create', {
         name,
         userId,
         description,

@@ -40,7 +40,7 @@ const HomePage = () => {
     // Fetch grounds data from API
     const fetchGrounds = async () => {
       try {
-        const response = await api.get('/api/grounds');
+        const response = await api.get('/grounds');
         setGrounds(response.data);
       } catch (error) {
         console.error('Error fetching grounds data:', error);
@@ -65,8 +65,7 @@ const HomePage = () => {
     // Check if the user is authenticated
     const checkAuth = async () => {
       try {
-        // Replace this with your actual authentication check logic
-        const response = await axios.get('/api/check-auth'); // Example API call to check authentication
+        const response = await api.get('/check-auth');
         setIsAuthenticated(response.data.isAuthenticated);
       } catch (error) {
         console.error('Error checking authentication:', error);

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import '../css/FacilityOwnerProfile.css';
 import Header from '../components/Header';
+import api from '../services/api';
 
 
 const FacilityOwnerProfile = () => {
@@ -35,7 +36,7 @@ const FacilityOwnerProfile = () => {
 
         // Pass the userId to the backend as a query parameter
         const response = await api.get(
-          `http://192.241.140.48:3000/api/grounds/facilityprofile?userId=${userId}`,
+          `/grounds/facilityprofile?userId=${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
