@@ -23,7 +23,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - REACT_APP_API_URL=https://192.241.140.48
+      - REACT_APP_API_URL=https://192.241.140.48:3000
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=production
     command: npm start -- --host 0.0.0.0
