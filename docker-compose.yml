@@ -25,7 +25,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - REACT_APP_API_URL=https://mykerchief.live
+      - REACT_APP_API_URL=https://mykerchief.live/api
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=production
     command: npm start -- --host 0.0.0.0
@@ -38,17 +38,6 @@ services:
       - mongo-data:/data/db
     command: ["mongod", "--bind_ip_all"]
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - /etc/ssl/certs:/etc/ssl/certs:ro
-      - /etc/ssl/private:/etc/ssl/private:ro
-    ports:
-      - "443:443"
-      - "80:80"
-    depends_on:
-      - backend
 
 
 volumes:

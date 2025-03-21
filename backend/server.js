@@ -13,7 +13,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
+// SSL configuration
+const sslOptions = {
+  ca: [
+    fs.readFileSync('/etc/ssl/certs/USERTrustRSAAAACA.crt')
+  ],
+  cert: fs.readFileSync('/etc/ssl/certs/2385291893.crt'),
+  key: fs.readFileSync('/etc/ssl/private/mykerchief_live_no_pass.key')
+};
 
 // Increase the limit to 50mb (or as per your requirement)
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -34,7 +41,7 @@ app.use(cors({
 app.use(express.json()); // Middleware to parse JSON
 
 // Routes
-app.use('/users', userRoutes);
+app.use('/api/', userRoutes);
 app.use('/api/', groundRoutes);
 app.use('/api/', reservationRoutes);
 app.use('/api/', courtRoutes);
@@ -47,8 +54,7 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://mongo:27017/mydatabase', {
   .then(() => console.log('Connected to MongoDB'))
   .catch(error => console.error('Error connecting to MongoDB:', error));
 
-// Since we're using Nginx for SSL, don't create an HTTPS server here. 
-// We just need the HTTP server listening on port 3000.
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Create HTTPS server instead of HTTP
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
 });
