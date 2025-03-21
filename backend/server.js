@@ -53,7 +53,8 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://mongo:27017/mydatabase', {
   .then(() => console.log('Connected to MongoDB'))
   .catch(error => console.error('Error connecting to MongoDB:', error));
 
-// Create HTTPS server instead of HTTP
-https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`HTTPS Server running on port ${PORT}`);
+
+// Create HTTP server instead of HTTPS
+http.createServer(app).listen(PORT, '0.0.0.0', () => {
+  console.log(`HTTP Server running on port ${PORT}`);
 });
