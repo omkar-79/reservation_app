@@ -40,10 +40,10 @@ app.use(cors({
 app.use(express.json()); // Middleware to parse JSON
 
 // Routes
-app.use('/', userRoutes);
-app.use('/', groundRoutes);
-app.use('/', reservationRoutes);
-app.use('/', courtRoutes);
+app.use('/api/', userRoutes);
+app.use('/api/', groundRoutes);
+app.use('/api/', reservationRoutes);
+app.use('/api/', courtRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL || 'mongodb://mongo:27017/mydatabase', {
