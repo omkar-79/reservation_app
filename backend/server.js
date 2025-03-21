@@ -15,9 +15,12 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+// Update CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://192.241.140.48',
-  credentials: true
+  origin: ['http://192.241.140.48:3001', 'http://192.241.140.48', 'http://localhost:3001', 'https://192.241.140.48:3001'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable CORS for all origins
 app.use(express.json()); // Middleware to parse JSON
 
