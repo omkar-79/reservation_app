@@ -37,7 +37,7 @@ A web application to reserve sports facilities like tennis courts, basketball co
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/mykerchief.git
+git clone https://github.com/omkar-79/mykerchief.git
 cd mykerchief
 ```
 2. Build and run the docker-compose:
